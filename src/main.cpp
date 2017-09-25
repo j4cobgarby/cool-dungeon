@@ -110,7 +110,7 @@ int main() {
         player.box.vx *= 0.9;
         player.box.vy *= 0.9;
 
-        window.clear(sf::Color::Black);
+        window.clear(Color(0x181425ff));
         
         for (Block block : world.background) {
             window.draw(block.rect);
