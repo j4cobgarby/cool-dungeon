@@ -1,0 +1,11 @@
+CMakeFiles
+cmake_install.cmake
+*.cmake
+CMakeCache.txt
+Makefile
+
+*.exe
+ndfk.*
+ndfk
+
+.vscode
