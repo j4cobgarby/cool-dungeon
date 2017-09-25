@@ -6,7 +6,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
-#include <string>
+#include <cstdarg>
 
 #include "Entity.hpp"
 #include "World.hpp"
@@ -38,7 +38,7 @@ Texture makeTexture(string filename, IntRect area) {
     return tex;
 }
 
-map<int, Texture> generateTilemapRegister(const string filename, 
+map<int, Texture> init_tilemap_register(const string filename, 
         const unsigned int tiles_x, const unsigned int tiles_y, // Amount of tiles on each axis
         const unsigned int tile_width, const unsigned int tile_height) { // Width in px of each tile texture
     map<int, Texture> reg;
@@ -53,24 +53,39 @@ map<int, Texture> generateTilemapRegister(const string filename,
     return reg;
 }
 
+map<string, Texture> init_texture_register() {
+    map<string, Texture> reg;
+
+    reg["player"] = makeTexture("assets/player.png");
+
+    return reg;
+}
+
 /** Populate texture register */
-map<int, Texture> tex_register = generateTilemapRegister("assets/tilemap.png", 5, 5, 16, 16);
+map<int, Texture> tilemap_register = init_tilemap_register("assets/tilemap.png", 5, 5, 16, 16);
+map<string, Texture> texture_register = init_texture_register();
 
 int main() {
     RenderWindow window(sf::VideoMode(1200, 900), "Test world");
     View player_view(Vector2f(200, 200), Vector2f(1200, 900));
-    player_view.zoom(0.5);
+    player_view.zoom(0.2);
     window.setView(player_view);
 
     ifstream level_file("levels/default/1.level", ios::in | ios::binary);
     if (!level_file.is_open()) return -1;
 
-    Entity player(100, 100, 30, 30, 0, 0, NULL);
+    Entity player( // each texture pixel is 30/16 = 1.875 game pixels
+        100, 100,                   // Position
+        9*1.875, 15*1.875,          // Box size
+        30, 30,                     // Rect size
+        4*1.875, 1*1.875,           // Texture offset
+        0, 0,                       // Initial velocity
+        &texture_register["player"] // Memory address of texture
+    );
 
     World world(&level_file);
 
     bool u=true,d=true,l=true,r=true;
-    Clock jumpClock;
     Clock deltaClock;
 
     while (window.isOpen()) {
@@ -106,6 +121,13 @@ int main() {
         }
 
         window.draw(player.rect);
+        RectangleShape player_box;
+        player_box.setPosition(Vector2f(player.box.x, player.box.y));
+        player_box.setFillColor(Color::Transparent);
+        player_box.setOutlineColor(Color::Green);
+        player_box.setOutlineThickness(0.5);
+        player_box.setSize(Vector2f(player.box.w, player.box.h));
+        window.draw(player_box);
 
         window.display();
 
@@ -157,7 +179,7 @@ int main() {
             r = true;
         }
 
-        player.rect.setPosition(Vector2f(player.box.x, player.box.y));
+        player.rect.setPosition(Vector2f(player.box.x - player.texture_offset_x, player.box.y - player.texture_offset_y));
         player_view.setCenter(Vector2f(
             lerp(player_view.getCenter().x, player.rect.getPosition().x + 45/2, 0.03), 
             lerp(player_view.getCenter().y, player.rect.getPosition().y + 45/2, 0.03)

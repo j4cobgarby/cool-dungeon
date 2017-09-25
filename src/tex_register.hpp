@@ -8,6 +8,7 @@
 using namespace std;
 using namespace sf;
 
-extern map<int, Texture> tex_register;
+extern map<int, Texture> tilemap_register;
+extern map<string, Texture> texture_register;
 
 #endif

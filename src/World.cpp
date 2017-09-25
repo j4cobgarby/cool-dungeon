@@ -36,9 +36,9 @@ World::World(ifstream *file) {
     for (unsigned int y = 0; y < h; y++) {
         for (unsigned int x = 0; x < w; x++) {
             if (collisions_data[y*w + x] != 0)
-                collisions.push_back(Block(x*50, y*50, &tex_register[collisions_data[y*w + x]]));
+                collisions.push_back(Block(x*50, y*50, &tilemap_register[collisions_data[y*w + x]]));
             if (background_data[y*w + x] != 0)
-                background.push_back(Block(x*50, y*50, &tex_register[background_data[y*w + x]]));
+                background.push_back(Block(x*50, y*50, &tilemap_register[background_data[y*w + x]]));
         }
     }
 

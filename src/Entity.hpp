@@ -9,9 +9,9 @@ class Entity {
 public:
     Box box;
     sf::RectangleShape rect;
+    float texture_offset_x, texture_offset_y;
 
-    Entity(float x, float y, float w, float h, float vx, float vy, sf::Texture *tex);
-    Entity(float x, float y, float w, float h, sf::Texture *tex);
+    Entity(float x, float y, float box_w, float box_h, float rect_w, float rect_h, float texture_offset_x, float texture_offset_y, float vx, float vy, sf::Texture *tex);
 };
 
 #endif
