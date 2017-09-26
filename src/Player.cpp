@@ -23,7 +23,9 @@ Player::Player(Vector2f position, Weapon weapon) :
         0, 0, 
         &texture_register["player"]) 
         {
+
     this->weapon = weapon;
+    health = 100;
 }
 
 void Player::update(Time *delta, World *world, RenderWindow *window) {
@@ -44,7 +46,9 @@ void Player::update(Time *delta, World *world, RenderWindow *window) {
 
     rect.setPosition(Vector2f(box.x - texture_offset_x, box.y - texture_offset_y));
 
-    // Collisions
+    /**
+     * Collisions
+     */
 
     Box broadphasebox = GetSweptBroadphaseBox(box);
     
@@ -94,10 +98,15 @@ void Player::update(Time *delta, World *world, RenderWindow *window) {
         r = true;
     }
 
+    /**
+     * Visual aspect of the sword
+     */
+
     Vector2f perceived_mouse_position = window->mapPixelToCoords(mouse_position);
 
     float middle_x = box.x + box.w/2;
     float middle_y = box.y + box.h/2;
+
     Vector2f diff(middle_x - perceived_mouse_position.x, middle_y - perceived_mouse_position.y);
     diff = normalize(diff);
 
