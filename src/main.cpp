@@ -1,7 +1,4 @@
 #include <SFML/Graphics.hpp>
-#include <cmath>
-#include <limits>
-#include <algorithm>
 #include <vector>
 #include <iostream>
 #include <fstream>
@@ -13,8 +10,8 @@
 #include "Block.hpp"
 #include "tex_register.hpp"
 #include "Maths.hpp"
-
-#define SPEED 30
+#include "AABB.hpp"
+#include "Player.hpp"
 
 using namespace std;
 using namespace sf;
@@ -57,6 +54,7 @@ map<string, Texture> init_texture_register() {
     map<string, Texture> reg;
 
     reg["player"] = makeTexture("assets/player.png");
+    reg["sword1"] = makeTexture("assets/sword-1.png");
 
     return reg;
 }
@@ -74,18 +72,10 @@ int main() {
     ifstream level_file("levels/default/1.level", ios::in | ios::binary);
     if (!level_file.is_open()) return -1;
 
-    Entity player( // each texture pixel is 30/16 = 1.875 game pixels
-        100, 100,                   // Position
-        9*1.875, 15*1.875,          // Box size
-        30, 30,                     // Rect size
-        4*1.875, 1*1.875,           // Texture offset
-        0, 0,                       // Initial velocity
-        &texture_register["player"] // Memory address of texture
-    );
+    Player player(Vector2f(100, 100), Weapon("Sword...", &texture_register["sword1"], 3, 100));
 
     World world(&level_file);
 
-    bool u=true,d=true,l=true,r=true;
     Clock deltaClock;
 
     while (window.isOpen()) {
@@ -97,89 +87,17 @@ int main() {
                 window.close();
         }
     
-        if (Keyboard::isKeyPressed(Keyboard::A) && l) {
-            player.box.vx -= delta.asSeconds() * SPEED;
-        } if (Keyboard::isKeyPressed(Keyboard::D) && r) {
-            player.box.vx += delta.asSeconds() * SPEED;
-        } if (Keyboard::isKeyPressed(Keyboard::W) && u) {
-            player.box.vy -= delta.asSeconds() * SPEED;
-        } if (Keyboard::isKeyPressed(Keyboard::S) && d) {
-            player.box.vy += delta.asSeconds() * SPEED;
-        }
-
-        player.box.vx *= 0.9;
-        player.box.vy *= 0.9;
+        player.update(&delta, &world, &window);
 
         window.clear(Color(0x181425ff));
         
-        for (Block block : world.background) {
-            window.draw(block.rect);
-        }
-
-        for (Block block : world.collisions) {
-            window.draw(block.rect);
-        }
-
+        for (Block block : world.background) window.draw(block.rect);
+        for (Block block : world.collisions) window.draw(block.rect);
         window.draw(player.rect);
-        RectangleShape player_box;
-        player_box.setPosition(Vector2f(player.box.x, player.box.y));
-        player_box.setFillColor(Color::Transparent);
-        player_box.setOutlineColor(Color::Green);
-        player_box.setOutlineThickness(0.5);
-        player_box.setSize(Vector2f(player.box.w, player.box.h));
-        window.draw(player_box);
+        window.draw(player.weapon.rect);
 
         window.display();
 
-        Box broadphasebox = GetSweptBroadphaseBox(player.box);
-
-        float normalx, normaly;
-        float collisiontime = 1;
-
-        for (Block block : world.collisions) {
-            Box b = block.box;
-            float bnormalx, bnormaly, bcollisiontime;
-            bcollisiontime = SweptAABB(player.box, b, &bnormalx, &bnormaly);
-            if (bcollisiontime != 1 && bcollisiontime < 1 && bcollisiontime < collisiontime && AABBCheck(broadphasebox, b)) {
-                collisiontime = bcollisiontime;
-                normalx = bnormalx;
-                normaly = bnormaly;
-            }
-        }
-
-        player.box.x += player.box.vx * collisiontime;
-        player.box.y += player.box.vy * collisiontime;
-        float remainingtime = 1.0f - collisiontime;
-
-        if (remainingtime != 0) {
-           float dotprod = (player.box.vx * normaly + player.box.vy * normalx) * remainingtime;
-           player.box.vx = dotprod * normaly;
-           player.box.vy = dotprod * normalx;
-           player.box.vx *= 1.12;
-           player.box.vy *= 1.12;
-
-            if (normaly == -1) {
-                d = false;
-                u = true;
-            } else if (normaly == 1) {
-                d = true;
-                u = false;
-            }
-            if (normalx == -1) {
-                l = true;
-                r = false;
-            } else if (normalx == 1) {
-                l = false;
-                r = true;
-            }
-        } else {
-            u = true;
-            d = true;
-            l = true;
-            r = true;
-        }
-
-        player.rect.setPosition(Vector2f(player.box.x - player.texture_offset_x, player.box.y - player.texture_offset_y));
         player_view.setCenter(Vector2f(
             lerp(player_view.getCenter().x, player.rect.getPosition().x + 45/2, 0.03), 
             lerp(player_view.getCenter().y, player.rect.getPosition().y + 45/2, 0.03)
@@ -188,95 +106,4 @@ int main() {
     }  
 
     return 0;
-}
-
-float SweptAABB(Box b1, Box b2, float *normalx, float *normaly) {
-    float xInvEntry, yInvEntry;
-    float xInvExit, yInvExit;
-
-    if (b1.vx > 0.0f) {
-        xInvEntry = b2.x - (b1.x + b1.w);
-        xInvExit = (b2.x + b2.w) - b1.x;
-    }
-    else {
-        xInvEntry = (b2.x + b2.w) - b1.x;
-        xInvExit = b2.x - (b1.x + b1.w);
-    }
-    if (b1.vy > 0.0f) {
-        yInvEntry = b2.y - (b1.y + b1.h);
-        yInvExit = (b2.y + b2.h) - b1.y;
-    }
-    else {
-        yInvEntry = (b2.y + b2.h) - b1.y;
-        yInvExit = b2.y - (b1.y + b1.h);
-    }
-
-    float xEntry, yEntry;
-    float xExit, yExit;
-    if (b1.vx == 0.0f) {
-        xEntry = -std::numeric_limits<float>::infinity();
-        xExit = std::numeric_limits<float>::infinity();
-    }
-    else {
-        xEntry = xInvEntry / b1.vx;
-        xExit = xInvExit / b1.vx;
-    }
-    if (b1.vy == 0.0f) {
-        yEntry = -std::numeric_limits<float>::infinity();
-        yExit = std::numeric_limits<float>::infinity();
-    }
-    else {
-        yEntry = yInvEntry / b1.vy;
-        yExit = yInvExit / b1.vy;
-    }
-
-    if (yEntry > 1.0f) yEntry = -numeric_limits<float>::max();
-    if (xEntry > 1.0f) xEntry = -numeric_limits<float>::max();
-
-    float entryTime = max(xEntry, yEntry);
-    float exitTime = min(xExit, yExit);
-
-    if (entryTime > exitTime || (xEntry < 0.0f && yEntry < 0.0f) || xEntry > 1.0f || yEntry > 1.0f) {
-        *normalx = 0.0f;
-        *normaly = 0.0f;
-        return 1.0f;
-    }
-
-    else {
-        if (xEntry > yEntry) {
-            if (xInvEntry < 0.0f) {
-                *normalx = 1.0f;
-                *normaly = 0.0f;
-            }
-            else {
-                *normalx = -1.0f;
-                *normaly = 0.0f;
-            }
-        }
-        else
-            {
-            if (yInvEntry < 0.0f) {
-                *normalx = 0.0f;
-                *normaly = 1.0f;
-            }
-            else {
-                *normalx = 0.0f;
-                *normaly = -1.0f;
-            }
-        }
-        return entryTime - 0.1;
-    }
-}
-
-Box GetSweptBroadphaseBox(Box b) {
-    Box broadphasebox;
-    broadphasebox.x = b.vx > 0 ? b.x : b.x + b.vx;
-    broadphasebox.y = b.vy > 0 ? b.y : b.y + b.vy;
-    broadphasebox.w = b.vx > 0 ? b.vx + b.w : b.w - b.vx;
-    broadphasebox.h = b.vy > 0 ? b.vy + b.h : b.h - b.vy;
-    return broadphasebox;
-}
-
-bool AABBCheck(Box b1, Box b2) {
-    return !(b1.x + b1.w < b2.x || b1.x > b2.x + b2.w || b1.y + b1.h < b2.y || b1.y > b2.y + b2.h);
 }
