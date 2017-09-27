@@ -116,7 +116,7 @@ void Player::update(Time *delta, World *world, RenderWindow *window) {
         delta->asSeconds() * 20
     ));
     weapon.rect.setPosition(Vector2f(
-        lerp(weapon.rect.getPosition().x, middle_x - diff.x*10, 0.1),
-        lerp(weapon.rect.getPosition().y, middle_y - diff.y*10, 0.1)
+        lerp(weapon.rect.getPosition().x, middle_x - diff.x*10, delta->asSeconds() * 30),
+        lerp(weapon.rect.getPosition().y, middle_y - diff.y*10, delta->asSeconds() * 30)
     ));
 }

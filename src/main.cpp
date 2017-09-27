@@ -99,8 +99,8 @@ int main() {
         window.display();
 
         player_view.setCenter(Vector2f(
-            lerp(player_view.getCenter().x, player.rect.getPosition().x + 45/2, 0.03),
-            lerp(player_view.getCenter().y, player.rect.getPosition().y + 45/2, 0.03)
+            lerp(player_view.getCenter().x, player.rect.getPosition().x + 45/2, 1),
+            lerp(player_view.getCenter().y, player.rect.getPosition().y + 45/2, 1)
         ));
         window.setView(player_view);
     }
