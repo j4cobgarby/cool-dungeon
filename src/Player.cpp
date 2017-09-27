@@ -15,13 +15,13 @@ Weapon::Weapon(string display_name, Texture *tex, unsigned short int damage, uns
     this->range = range;
 }
 
-Player::Player(Vector2f position, Weapon weapon) : 
-    Entity(position.x, position.y, 
-        9*1.875, 15*1.875, 
-        30, 30, 
-        1*1.875, 0, 
-        0, 0, 
-        &texture_register["player"]) 
+Player::Player(Vector2f position, Weapon weapon) :
+    Entity(position.x, position.y,
+        9*1.875, 15*1.875,
+        30, 30,
+        1*1.875, 0,
+        0, 0,
+        &texture_register["player"])
         {
 
     this->weapon = weapon;
@@ -51,7 +51,7 @@ void Player::update(Time *delta, World *world, RenderWindow *window) {
      */
 
     Box broadphasebox = GetSweptBroadphaseBox(box);
-    
+
     float normalx, normaly;
     float collisiontime = 1;
 
@@ -113,10 +113,10 @@ void Player::update(Time *delta, World *world, RenderWindow *window) {
     weapon.rect.setRotation(lerpangle(
         weapon.rect.getRotation(),
         (atan2(diff.y, diff.x) * 180/M_PI) + 225,
-        0.008
+        delta->asSeconds() * 20
     ));
     weapon.rect.setPosition(Vector2f(
-        middle_x - diff.x*10,
-        middle_y - diff.y*10
+        lerp(weapon.rect.getPosition().x, middle_x - diff.x*10, 0.1),
+        lerp(weapon.rect.getPosition().y, middle_y - diff.y*10, 0.1)
     ));
 }

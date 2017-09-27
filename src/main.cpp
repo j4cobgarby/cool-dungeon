@@ -35,7 +35,7 @@ Texture makeTexture(string filename, IntRect area) {
     return tex;
 }
 
-map<int, Texture> init_tilemap_register(const string filename, 
+map<int, Texture> init_tilemap_register(const string filename,
         const unsigned int tiles_x, const unsigned int tiles_y, // Amount of tiles on each axis
         const unsigned int tile_width, const unsigned int tile_height) { // Width in px of each tile texture
     map<int, Texture> reg;
@@ -80,17 +80,17 @@ int main() {
 
     while (window.isOpen()) {
         Time delta = deltaClock.restart();
-        
+
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
         }
-    
+
         player.update(&delta, &world, &window);
 
         window.clear(Color(0x181425ff));
-        
+
         for (Block block : world.background) window.draw(block.rect);
         for (Block block : world.collisions) window.draw(block.rect);
         window.draw(player.rect);
@@ -99,11 +99,11 @@ int main() {
         window.display();
 
         player_view.setCenter(Vector2f(
-            lerp(player_view.getCenter().x, player.rect.getPosition().x + 45/2, 0.03), 
+            lerp(player_view.getCenter().x, player.rect.getPosition().x + 45/2, 0.03),
             lerp(player_view.getCenter().y, player.rect.getPosition().y + 45/2, 0.03)
         ));
         window.setView(player_view);
-    }  
+    }
 
     return 0;
 }
