@@ -8,6 +8,8 @@
 #include "asset_registers.hpp"
 
 #define STATBAR_HEIGHT  250
+#define STAT_REL_OFFSET 240
+#define STAT_OFFSET     45
 
 /** A HUD for the player to keep an eye on stats, health, etc.
  * @param player  A pointer to the player to track the stats, health, etc.
@@ -15,8 +17,15 @@
  */
 class StatusBar {
 private:
-  Player *player;
-  World *world;
+  Player *_player;
+  World *_world;
+
+  vector<array<string, 2>> _stat_dat {
+    {"HEA", "hea"},
+    {"ATK", "atk"},
+    {"DEF", "def"},
+    {"DEX", "dex"}
+  };
 public:
   StatusBar(Player *player, World *world);
 

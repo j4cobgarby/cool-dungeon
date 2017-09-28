@@ -33,14 +33,13 @@ public:
 
     Weapon weapon;
 
-    unsigned short int health; /** As a percentage (0-100) */
-
     bool u=true,d=true,l=true,r=true;
 
     map<string, unsigned short int> stats {
-        {"atk", 0},
-        {"def", 0},
-        {"dex", 0},
+        {"hea", 100},
+        {"atk", 7},
+        {"def", 2},
+        {"dex", 4},
     };
 
     void update(Time *delta, World *world, RenderWindow *window) ;

@@ -25,7 +25,6 @@ Player::Player(Vector2f position, Weapon weapon) :
         {
 
     this->weapon = weapon;
-    health = 100;
 }
 
 void Player::update(Time *delta, World *world, RenderWindow *window) {
