@@ -112,11 +112,11 @@ void Player::update(Time *delta, World *world, RenderWindow *window) {
 
     weapon.rect.setRotation(lerpangle(
         weapon.rect.getRotation(),
-        (atan2(diff.y, diff.x) * 180/M_PI) + 225,
+        (atan2(diff.y, diff.x) * 180/PI) + 225,
         delta->asSeconds() * 20
     ));
     weapon.rect.setPosition(Vector2f(
-        lerp(weapon.rect.getPosition().x, middle_x - diff.x*10, delta->asSeconds() * 30),
-        lerp(weapon.rect.getPosition().y, middle_y - diff.y*10, delta->asSeconds() * 30)
+        middle_x - diff.x*10,
+        middle_y - diff.y*10
     ));
 }

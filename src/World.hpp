@@ -7,7 +7,7 @@
 
 #include "Block.hpp"
 #include "Entity.hpp"
-#include "tex_register.hpp"
+#include "asset_registers.hpp"
 
 class World {
 public:

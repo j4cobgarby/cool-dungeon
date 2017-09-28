@@ -7,7 +7,7 @@
 #include <string>
 
 #include "Entity.hpp"
-#include "tex_register.hpp"
+#include "asset_registers.hpp"
 #include "AABB.hpp"
 #include "World.hpp"
 #include "Maths.hpp"

@@ -5,7 +5,9 @@
 
 #include "Player.hpp"
 #include "World.hpp"
-#include "tex_register.hpp"
+#include "asset_registers.hpp"
+
+#define STATBAR_HEIGHT  250
 
 /** A HUD for the player to keep an eye on stats, health, etc.
  * @param player  A pointer to the player to track the stats, health, etc.
@@ -19,7 +21,6 @@ public:
   StatusBar(Player *player, World *world);
 
   void draw(RenderWindow *window);
-  void update();
 };
 
 #endif

@@ -8,32 +8,14 @@
 #include "Entity.hpp"
 #include "World.hpp"
 #include "Block.hpp"
-#include "tex_register.hpp"
+#include "asset_registers.hpp"
 #include "Maths.hpp"
 #include "AABB.hpp"
 #include "Player.hpp"
+#include "StatusBar.hpp"
 
 using namespace std;
 using namespace sf;
-
-float SweptAABB(Box b1, Box b2, float *normalx, float *normaly);
-Box GetSweptBroadphaseBox(Box b);
-bool AABBCheck(Box b1, Box b2);
-
-Texture tex_wall_normal;
-Texture tex_floor_normal;
-
-Texture makeTexture(string filename) {
-    Texture tex;
-    tex.loadFromFile(filename);
-    return tex;
-}
-
-Texture makeTexture(string filename, IntRect area) {
-    Texture tex;
-    tex.loadFromFile(filename, area);
-    return tex;
-}
 
 map<int, Texture> init_tilemap_register(const string filename,
         const unsigned int tiles_x, const unsigned int tiles_y, // Amount of tiles on each axis
@@ -50,22 +32,21 @@ map<int, Texture> init_tilemap_register(const string filename,
     return reg;
 }
 
-map<string, Texture> init_texture_register() {
-    map<string, Texture> reg;
-
-    reg["player"] = makeTexture("assets/player.png");
-    reg["sword1"] = makeTexture("assets/sword-1.png");
-
-    return reg;
-}
-
 /** Populate texture register */
 map<int, Texture> tilemap_register = init_tilemap_register("assets/tilemap.png", 5, 5, 16, 16);
-map<string, Texture> texture_register = init_texture_register();
+
+map<string, Texture> texture_register {
+    {"player", makeTexture("assets/player.png")},
+    {"sword1", makeTexture("assets/sword-1.png")}
+};
+
+map<string, Font> font_register {
+    {"ipixelu", makeFont("assets/fonts/I-pixel-u.ttf")}
+};
 
 int main() {
-    RenderWindow window(sf::VideoMode(1200, 900), "Test world");
-    View player_view(Vector2f(200, 200), Vector2f(1200, 900));
+    RenderWindow window(sf::VideoMode(1500, 1400), "Test world");
+    View player_view(Vector2f(200, 200), Vector2f(1500, 1400));
     player_view.zoom(0.2);
     window.setView(player_view);
 
@@ -73,8 +54,9 @@ int main() {
     if (!level_file.is_open()) return -1;
 
     Player player(Vector2f(100, 100), Weapon("Sword...", &texture_register["sword1"], 3, 100));
-
     World world(&level_file);
+
+    StatusBar statbar(&player, &world);
 
     Clock deltaClock;
 
@@ -95,6 +77,10 @@ int main() {
         for (Block block : world.collisions) window.draw(block.rect);
         window.draw(player.rect);
         window.draw(player.weapon.rect);
+
+        window.setView(window.getDefaultView());
+        statbar.draw(&window);
+        window.setView(player_view);
 
         window.display();
 

@@ -4,7 +4,7 @@
 #include <SFML/Graphics.hpp>
 
 #include "Box.hpp"
-#include "tex_register.hpp"
+#include "asset_registers.hpp"
 
 class Entity {
 public:

@@ -1,6 +1,8 @@
 #ifndef MATHS_HPP
 #define MATHS_HPP
 
+#define PI 3.1415926
+
 #include <SFML/Graphics.hpp>
 #include <cmath>
 
