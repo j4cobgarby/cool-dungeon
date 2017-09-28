@@ -37,15 +37,20 @@ map<int, Texture> tilemap_register = init_tilemap_register("assets/tilemap.png",
 
 map<string, Texture> texture_register {
     {"player", makeTexture("assets/player.png")},
-    {"sword1", makeTexture("assets/sword-1.png")}
-};
+    {"sword1", makeTexture("assets/sword-1.png")},
+    {"cursor", makeTexture("assets/cursor.png")}};
 
 map<string, Font> font_register {
-    {"ipixelu", makeFont("assets/fonts/I-pixel-u.ttf")}
+    {"main_font", makeFont("assets/fonts/I-pixel-u.ttf")}
 };
 
 int main() {
     RenderWindow window(sf::VideoMode(1500, 1400), "Test world");
+    window.setMouseCursorVisible(false);
+
+    Sprite cursor(texture_register["cursor"]);
+    cursor.setScale(8, 8);
+
     View player_view(Vector2f(200, 200), Vector2f(1500, 1400));
     player_view.zoom(0.2);
     window.setView(player_view);
@@ -70,6 +75,7 @@ int main() {
         }
 
         player.update(&delta, &world, &window);
+        cursor.setPosition((Vector2f)Mouse::getPosition(window));
 
         window.clear(Color(0x181425ff));
 
@@ -80,6 +86,7 @@ int main() {
 
         window.setView(window.getDefaultView());
         statbar.draw(&window);
+        window.draw(cursor);
         window.setView(player_view);
 
         window.display();

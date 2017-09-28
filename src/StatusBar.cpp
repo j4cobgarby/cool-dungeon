@@ -6,7 +6,7 @@ StatusBar::StatusBar(Player *player, World *world) {
 }
 
 Text make_stat_text(Vector2f position, string stat, int value) {
-    Text ret(stat + '\n' + to_string(value), font_register["ipixelu"]);
+    Text ret(stat + '\n' + to_string(value), font_register["main_font"]);
     ret.setCharacterSize(85);
     ret.setFillColor(Color::White);
     ret.setPosition(position);
