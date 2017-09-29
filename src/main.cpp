@@ -35,13 +35,19 @@ map<int, Texture> init_tilemap_register(const string filename,
 /** Populate texture register */
 map<int, Texture> tilemap_register = init_tilemap_register("assets/images/tilemap.png", 5, 5, 16, 16);
 
+map<string, vector<Texture>> animation_register {
+    {"explode", makeAnimation("assets/images/explode.png", 16, 16, 16)},
+    {"hit", makeAnimation("assets/images/hit-effect.png", 11, 16, 16)},
+};
+
 map<string, Texture> texture_register {
     {"player", makeTexture("assets/images/player.png")},
     {"sword1", makeTexture("assets/images/sword.png")},
-    {"cursor", makeTexture("assets/images/cursor.png")}};
+    {"cursor", makeTexture("assets/images/cursor.png")},
+};
 
 map<string, Font> font_register {
-    {"main_font", makeFont("assets/fonts/I-pixel-u.ttf")}
+    {"main_font", makeFont("assets/fonts/I-pixel-u.ttf")},
 };
 
 int main() {
