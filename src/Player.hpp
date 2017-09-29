@@ -12,7 +12,7 @@
 #include "World.hpp"
 #include "Maths.hpp"
 
-#define SPEED 3
+#define SPEED 40
 
 class Weapon {
 public:

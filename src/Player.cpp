@@ -30,6 +30,9 @@ Player::Player(Vector2f position, Weapon weapon) :
 void Player::update(Time *delta, World *world, RenderWindow *window, const Vector2f *cursor_pos) {
     Vector2i mouse_position = Mouse::getPosition(*window);
 
+    box.vx *= 0.8;
+    box.vy *= 0.8;
+
     if (Keyboard::isKeyPressed(Keyboard::A) && l) {
         box.vx -= delta->asSeconds() * SPEED;
     } if (Keyboard::isKeyPressed(Keyboard::D) && r) {
@@ -39,9 +42,6 @@ void Player::update(Time *delta, World *world, RenderWindow *window, const Vecto
     } if (Keyboard::isKeyPressed(Keyboard::S) && d) {
         box.vy += delta->asSeconds() * SPEED;
     }
-
-    box.vx *= 0.99;
-    box.vy *= 0.99;
 
     rect.setPosition(Vector2f(box.x - texture_offset_x, box.y - texture_offset_y));
 
