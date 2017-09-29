@@ -12,7 +12,7 @@
 #include "World.hpp"
 #include "Maths.hpp"
 
-#define SPEED 30
+#define SPEED 3
 
 class Weapon {
 public:
@@ -37,9 +37,9 @@ public:
 
     map<string, unsigned short int> stats {
         {"hea", 100},
-        {"atk", 7},
-        {"def", 2},
-        {"dex", 4},
+        {"atk", 0},
+        {"def", 0},
+        {"dex", 0},
     };
 
     void update(Time *delta, World *world, RenderWindow *window) ;

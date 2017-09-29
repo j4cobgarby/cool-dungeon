@@ -40,8 +40,8 @@ void Player::update(Time *delta, World *world, RenderWindow *window) {
         box.vy += delta->asSeconds() * SPEED;
     }
 
-    box.vx *= 0.9;
-    box.vy *= 0.9;
+    box.vx *= 0.99;
+    box.vy *= 0.99;
 
     rect.setPosition(Vector2f(box.x - texture_offset_x, box.y - texture_offset_y));
 
