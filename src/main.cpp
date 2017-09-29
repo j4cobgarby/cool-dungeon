@@ -33,12 +33,12 @@ map<int, Texture> init_tilemap_register(const string filename,
 }
 
 /** Populate texture register */
-map<int, Texture> tilemap_register = init_tilemap_register("assets/tilemap.png", 5, 5, 16, 16);
+map<int, Texture> tilemap_register = init_tilemap_register("assets/images/tilemap.png", 5, 5, 16, 16);
 
 map<string, Texture> texture_register {
-    {"player", makeTexture("assets/player.png")},
-    {"sword1", makeTexture("assets/sword-1.png")},
-    {"cursor", makeTexture("assets/cursor.png")}};
+    {"player", makeTexture("assets/images/player.png")},
+    {"sword1", makeTexture("assets/images/sword.png")},
+    {"cursor", makeTexture("assets/images/cursor.png")}};
 
 map<string, Font> font_register {
     {"main_font", makeFont("assets/fonts/I-pixel-u.ttf")}
@@ -72,10 +72,16 @@ int main() {
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
                 window.close();
+            if (event.type == sf::Event::MouseButtonPressed) {
+                if (event.mouseButton.button == Mouse::Left) {
+                    player.click(&delta, &world, &window);
+                }
+            }
         }
 
-        player.update(&delta, &world, &window);
         cursor.setPosition((Vector2f)Mouse::getPosition(window));
+
+        player.update(&delta, &world, &window, &cursor.getPosition());
 
         window.clear(Color(0x181425ff));
 

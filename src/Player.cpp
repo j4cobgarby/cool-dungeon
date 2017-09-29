@@ -27,7 +27,7 @@ Player::Player(Vector2f position, Weapon weapon) :
     this->weapon = weapon;
 }
 
-void Player::update(Time *delta, World *world, RenderWindow *window) {
+void Player::update(Time *delta, World *world, RenderWindow *window, const Vector2f *cursor_pos) {
     Vector2i mouse_position = Mouse::getPosition(*window);
 
     if (Keyboard::isKeyPressed(Keyboard::A) && l) {
@@ -101,7 +101,7 @@ void Player::update(Time *delta, World *world, RenderWindow *window) {
      * Visual aspect of the sword
      */
 
-    Vector2f perceived_mouse_position = window->mapPixelToCoords(mouse_position);
+    Vector2f perceived_mouse_position = window->mapPixelToCoords((Vector2i)*cursor_pos);
 
     float middle_x = box.x + box.w/2;
     float middle_y = box.y + box.h/2;
@@ -115,7 +115,29 @@ void Player::update(Time *delta, World *world, RenderWindow *window) {
         delta->asSeconds() * 20
     ));
     weapon.rect.setPosition(Vector2f(
-        middle_x - diff.x*10,
-        middle_y - diff.y*10
+        middle_x - diff.x*20,
+        middle_y - diff.y*20
+    ));
+}
+
+void Player::click(Time *delta, World *world, RenderWindow *window) {
+    cout << "Clicked" << endl;
+
+    Vector2f perceived_mouse_position = window->mapPixelToCoords(Mouse::getPosition(*window));
+    
+    float middle_x = box.x + box.w/2;
+    float middle_y = box.y + box.h/2;
+
+    Vector2f diff(middle_x - perceived_mouse_position.x, middle_y - perceived_mouse_position.y);
+    diff = normalize(diff);
+
+    weapon.rect.setRotation(lerpangle(
+        weapon.rect.getRotation(),
+        (atan2(diff.y, diff.x) * 180/PI) + 225,
+        delta->asSeconds() * 20
+    ));
+    weapon.rect.setPosition(Vector2f(
+        middle_x - diff.x*20,
+        middle_y - diff.y*20
     ));
 }
