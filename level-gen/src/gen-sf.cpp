@@ -59,27 +59,13 @@ int main() {
     cout << "HEIGHT: \n";
     cin >> h;
 
-    cin.ignore();
-
     outfile << "LVL";
     outfile.put(w);
     outfile.put(h);
 
-    string tilemap_path;
-    cout << "Okay - the header info has been written to the file.\n";
-    cout << "What's the path to the tilemap?\n";
-    cout << "TILEMAP PATH: ";
-    cin >> tilemap_path;
+    string tilemap_path = "../assets/images/tilemap.png";
 
-    unsigned int tilesx, tilesy, tilewidth, tileheight;
-    cout << "tilesx: ";
-    cin >> tilesx;
-    cout << "tilesy: ";
-    cin >> tilesy;
-    cout << "tilewidth: ";
-    cin >> tilewidth;
-    cout << "tileheight: ";
-    cin >> tileheight;
+    unsigned int tilesx = 5, tilesy  = 5, tilewidth = 16, tileheight = 16;
 
     map<int, Texture> tilemap = init_tilemap_register(tilemap_path, tilesx, tilesy, tilewidth, tileheight);
     int c_id = 1;
@@ -127,7 +113,7 @@ int main() {
                     blocks.at(b_index) = c_id;
                 }
             } else {
-                current_block.setOutlineColor(Color::Red);
+                current_block.setOutlineColor(Color(0x686868ff));
             }
             current_block.setOutlineThickness(0.5);
             current_block.setTexture(&tilemap[blocks[b_index]]);
@@ -145,14 +131,20 @@ int main() {
         window.display();
     }
 
-    cout << blocks.size() << endl;
+    
     for (int i = 0; i < blocks.size(); i++) {
-        outfile.put(blocks[i]);
+        outfile.put(blocks.at(i));
     }
     for (int i = 0; i < blocks.size(); i++) {
         outfile.put(18);
+        //outfile.put(1);
     }
 
     cout << "Success!" << endl;
-    cin.ignore();
 }
+
+/*
+for (int i = 0; i < 1800; i++) {
+        outfile.put(0);
+}
+*/
