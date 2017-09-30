@@ -83,6 +83,7 @@ int main() {
 
     while (window.isOpen()) {
         Time delta = deltaClock.restart();
+        window.setTitle(to_string(1/delta.asSeconds()));
 
         sf::Event event;
         while (window.pollEvent(event)) {

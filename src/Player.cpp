@@ -78,7 +78,10 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
     box.vx *= 0.9;
     box.vy *= 0.9;
 
-    rect.setPosition(Vector2f(box.x - texture_offset_x, box.y - texture_offset_y));
+    rect.setPosition(Vector2f(
+        box.x - texture_offset_x,
+        box.y - texture_offset_y
+    ));
 
     /**
      * Collisions
@@ -111,13 +114,26 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
         box.vx *= 1.12;
         box.vy *= 1.12;
 
-        if (normaly == -1) {_d = false;_u = true;} 
-        else if (normaly == 1) {_d = true;_u = false;}
-
-        if (normalx == -1) {_l = true;_r = false;} 
-        else if (normalx == 1) {_l = false;_r = true;}
-
-    } else {_u = true;_d = true;_l = true;_r = true;}
+        if (normaly == -1) {
+            _d = false;
+            _u = true;
+        } else if (normaly == 1) {
+            _d = true;
+            _u = false;
+        }
+        if (normalx == -1) {
+            _l = true;
+            _r = false;
+        } else if (normalx == 1) {
+            _l = false;
+            _r = true;
+        }
+    } else {
+        _u = true;
+        _d = true;
+        _l = true;
+        _r = true;
+    }
 
     Vector2f perceived_mouse_position = window->mapPixelToCoords((Vector2i)*cursor_pos);
 
