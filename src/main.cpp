@@ -38,6 +38,8 @@ map<int, Texture> tilemap_register = init_tilemap_register("assets/images/tilema
 map<string, vector<Texture>> animation_register {
     {"explode", makeAnimation("assets/images/explode.png", 16, 16, 16)},
     {"hit", makeAnimation("assets/images/hit-effect.png", 11, 16, 16)},
+
+    {"player/idle", makeAnimation("assets/images/player_idle.png", 1, 16, 16)},
 };
 
 map<string, Texture> texture_register {
@@ -69,6 +71,7 @@ int main() {
 
     StatusBar statbar(&player, &world);
 
+    Clock global_clock;
     Clock deltaClock;
 
     while (window.isOpen()) {
@@ -87,7 +90,7 @@ int main() {
 
         cursor.setPosition((Vector2f)Mouse::getPosition(window));
 
-        player.update(&delta, &world, &window, &cursor.getPosition());
+        player.update(&delta, &global_clock, &world, &window, &cursor.getPosition());
 
         window.clear(Color(0x181425ff));
 

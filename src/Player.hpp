@@ -42,7 +42,7 @@ public:
         {"dex", 0},
     };
 
-    void update(Time *delta, World *world, RenderWindow *window, const Vector2f *cursor_pos);
+    void update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, const Vector2f *cursor_pos);
     void click(Time *delta, World *world, RenderWindow *window);
 };
 
