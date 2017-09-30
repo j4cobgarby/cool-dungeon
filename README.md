@@ -1,1 +1,1 @@
-!(github-stuff/demo.gif)[Demo]
+![Demo](github-stuff/demo.gif)
