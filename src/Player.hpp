@@ -35,7 +35,7 @@ public:
 
     Weapon weapon;
 
-    map<string, unsigned short int> stats {
+    map<string, int8_t> stats {
         {"hea", 100},
         {"atk", 0},
         {"def", 0},

@@ -5,7 +5,7 @@ StatusBar::StatusBar(Player *player, World *world) {
     this->_world = world;
 }
 
-Text make_stat_text(Vector2f position, string stat, int value) {
+Text make_stat_text(const Vector2f position, const string stat, const int value) {
     Text ret(stat + '\n' + to_string(value), font_register["main_font"]);
     ret.setCharacterSize(85);
     ret.setFillColor(Color::White);

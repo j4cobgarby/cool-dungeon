@@ -60,6 +60,8 @@ int main() {
     RenderWindow window(sf::VideoMode(1500, 1400), "A cool dungeon game");
     window.setMouseCursorVisible(false);
 
+    srand(time(NULL));
+
     Sprite cursor(texture_register["cursor"]);
     cursor.setScale(8, 8);
 

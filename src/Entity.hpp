@@ -13,11 +13,11 @@ public:
     float texture_offset_x, texture_offset_y;
 
     Entity();
-    Entity(float x, float y, 
-        float box_w, float box_h, 
-        float rect_w, float rect_h, 
-        float texture_offset_x, float texture_offset_y, 
-        float vx, float vy, 
+    Entity(const float x, const float y, 
+        const float box_w, const float box_h, 
+        const float rect_w, const float rect_h, 
+        const float texture_offset_x, const float texture_offset_y, 
+        const float vx, const float vy, 
         sf::Texture *tex);
 };
 
