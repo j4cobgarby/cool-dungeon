@@ -28,6 +28,11 @@ Player::Player(Vector2f position, Weapon weapon) :
 }
 
 void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, const Vector2f *cursor_pos) {
+    if (_score_timer.getElapsedTime().asMilliseconds() >= 4000) {
+        _score_timer.restart();
+        stats["sco"]++;
+    }
+
     if (Keyboard::isKeyPressed(Keyboard::A) && _l) {
         box.vx -= delta->asSeconds() * SPEED;
     } if (Keyboard::isKeyPressed(Keyboard::D) && _r) {
@@ -38,27 +43,31 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
         box.vy += delta->asSeconds() * SPEED;
     }
 
-    int elapsed_time_divisor = 100;
-    string animation_key = "player_idle";
+    int elapsed_time_divisor = 200;
+    string animation_key = (facing == d_right ? "player_idle_rt" : "player_idle_lt");
 
+    if (Keyboard::isKeyPressed(Keyboard::W)) {
+        animation_key = (facing == d_right ? "player_walk_uprt" : "player_walk_uplt");
+    }
+    if (Keyboard::isKeyPressed(Keyboard::S)) {
+        animation_key = (facing == d_right ? "player_walk_rt" : "player_walk_lt");
+    }
     if (Keyboard::isKeyPressed(Keyboard::A)) {
+        facing = d_left;
         if (Keyboard::isKeyPressed(Keyboard::W)) {
             /** Up/left */
-            elapsed_time_divisor = 200;
             animation_key = "player_walk_uplt";
         } else {
             /** Left */
-            elapsed_time_divisor = 200;
             animation_key = "player_walk_lt";
         }
-    } else if (Keyboard::isKeyPressed(Keyboard::D)) {
+    } if (Keyboard::isKeyPressed(Keyboard::D)) {
+        facing = d_right;
         if (Keyboard::isKeyPressed(Keyboard::W)) {
             /** Up/right */
-            elapsed_time_divisor = 200;
             animation_key = "player_walk_uprt";
         } else {
             /** Right */
-            elapsed_time_divisor = 200;
             animation_key = "player_walk_rt";
         }
     }
@@ -107,7 +116,7 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
 
         if (normalx == -1) {_l = true;_r = false;} 
         else if (normalx == 1) {_l = false;_r = true;}
-        
+
     } else {_u = true;_d = true;_l = true;_r = true;}
 
     Vector2f perceived_mouse_position = window->mapPixelToCoords((Vector2i)*cursor_pos);

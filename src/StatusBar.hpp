@@ -24,7 +24,8 @@ private:
     {"HEA", "hea"},
     {"ATK", "atk"},
     {"DEF", "def"},
-    {"DEX", "dex"}
+    {"DEX", "dex"},
+    {"SCO", "sco"}
   };
 public:
   StatusBar(Player *player, World *world);

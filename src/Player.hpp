@@ -30,16 +30,20 @@ public:
 class Player : public Entity {
 private:
     bool _u=true,_d=true,_l=true,_r=true;
+
+    Direction facing = d_right;
+    Clock _score_timer;
 public:
     Player(Vector2f position, Weapon weapon);
 
     Weapon weapon;
 
-    map<string, int8_t> stats {
-        {"hea", 100},
+    map<string, short int> stats {
+        {"hea", 10},
         {"atk", 0},
         {"def", 0},
         {"dex", 0},
+        {"sco", 0},
     };
 
     void update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, const Vector2f *cursor_pos);

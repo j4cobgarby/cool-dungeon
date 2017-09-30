@@ -39,7 +39,8 @@ map<string, vector<Texture>> animation_register {
     {"explode",             makeAnimation("assets/images/explode.png",          16, 16, 16)},
     {"hit",                 makeAnimation("assets/images/hit-effect.png",       11, 16, 16)},
 
-    {"player_idle",         makeAnimation("assets/images/player_idle.png",      1, 16, 16)},
+    {"player_idle_rt",      makeAnimation("assets/images/player_idle_rt.png",   1, 16, 16)},
+    {"player_idle_lt",      makeAnimation("assets/images/player_idle_lt.png",   1, 16, 16)},
     {"player_walk_rt",      makeAnimation("assets/images/player_walk_rt.png",   2, 16, 16)},
     {"player_walk_lt",      makeAnimation("assets/images/player_walk_lt.png",   2, 16, 16)},
     {"player_walk_uprt",    makeAnimation("assets/images/player_walk_uprt.png", 2, 16, 16)},

@@ -6,6 +6,8 @@
 #include "Box.hpp"
 #include "asset_registers.hpp"
 
+enum Direction {d_left, d_right};
+
 class Entity {
 public:
     Box box;
