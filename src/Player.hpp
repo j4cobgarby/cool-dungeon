@@ -28,12 +28,12 @@ public:
 };
 
 class Player : public Entity {
+private:
+    bool _u=true,_d=true,_l=true,_r=true;
 public:
     Player(Vector2f position, Weapon weapon);
 
     Weapon weapon;
-
-    bool u=true,d=true,l=true,r=true;
 
     map<string, unsigned short int> stats {
         {"hea", 100},

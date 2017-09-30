@@ -28,21 +28,46 @@ Player::Player(Vector2f position, Weapon weapon) :
 }
 
 void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, const Vector2f *cursor_pos) {
-    rect.setTexture(&animation_register["player/idle"].at(
-        (g_clock->getElapsedTime().asMilliseconds()/50) % animation_register["player/idle"].size()));
-    
-    box.vx *= 0.9;
-    box.vy *= 0.9;
-
-    if (Keyboard::isKeyPressed(Keyboard::A) && l) {
+    if (Keyboard::isKeyPressed(Keyboard::A) && _l) {
         box.vx -= delta->asSeconds() * SPEED;
-    } if (Keyboard::isKeyPressed(Keyboard::D) && r) {
+    } if (Keyboard::isKeyPressed(Keyboard::D) && _r) {
         box.vx += delta->asSeconds() * SPEED;
-    } if (Keyboard::isKeyPressed(Keyboard::W) && u) {
+    } if (Keyboard::isKeyPressed(Keyboard::W) && _u) {
         box.vy -= delta->asSeconds() * SPEED;
-    } if (Keyboard::isKeyPressed(Keyboard::S) && d) {
+    } if (Keyboard::isKeyPressed(Keyboard::S) && _d) {
         box.vy += delta->asSeconds() * SPEED;
     }
+
+    int elapsed_time_divisor = 100;
+    string animation_key = "player_idle";
+
+    if (Keyboard::isKeyPressed(Keyboard::A)) {
+        if (Keyboard::isKeyPressed(Keyboard::W)) {
+            /** Up/left */
+            elapsed_time_divisor = 200;
+            animation_key = "player_walk_uplt";
+        } else {
+            /** Left */
+            elapsed_time_divisor = 200;
+            animation_key = "player_walk_lt";
+        }
+    } else if (Keyboard::isKeyPressed(Keyboard::D)) {
+        if (Keyboard::isKeyPressed(Keyboard::W)) {
+            /** Up/right */
+            elapsed_time_divisor = 200;
+            animation_key = "player_walk_uprt";
+        } else {
+            /** Right */
+            elapsed_time_divisor = 200;
+            animation_key = "player_walk_rt";
+        }
+    }
+
+    rect.setTexture(&animation_register[animation_key].at(
+        (g_clock->getElapsedTime().asMilliseconds() / elapsed_time_divisor) % animation_register[animation_key].size()));
+
+    box.vx *= 0.9;
+    box.vy *= 0.9;
 
     rect.setPosition(Vector2f(box.x - texture_offset_x, box.y - texture_offset_y));
 
@@ -78,24 +103,24 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
         box.vy *= 1.12;
 
         if (normaly == -1) {
-            d = false;
-            u = true;
+            _d = false;
+            _u = true;
         } else if (normaly == 1) {
-            d = true;
-            u = false;
+            _d = true;
+            _u = false;
         }
         if (normalx == -1) {
-            l = true;
-            r = false;
+            _l = true;
+            _r = false;
         } else if (normalx == 1) {
-            l = false;
-            r = true;
+            _l = false;
+            _r = true;
         }
     } else {
-        u = true;
-        d = true;
-        l = true;
-        r = true;
+        _u = true;
+        _d = true;
+        _l = true;
+        _r = true;
     }
 
     /**
@@ -122,6 +147,5 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
 }
 
 void Player::click(Time *delta, World *world, RenderWindow *window) {
-    // TODO: this
     cout << "Clicked" << endl;
 }

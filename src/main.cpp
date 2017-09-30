@@ -36,10 +36,14 @@ map<int, Texture> init_tilemap_register(const string filename,
 map<int, Texture> tilemap_register = init_tilemap_register("assets/images/tilemap.png", 5, 5, 16, 16);
 
 map<string, vector<Texture>> animation_register {
-    {"explode", makeAnimation("assets/images/explode.png", 16, 16, 16)},
-    {"hit", makeAnimation("assets/images/hit-effect.png", 11, 16, 16)},
+    {"explode",             makeAnimation("assets/images/explode.png",          16, 16, 16)},
+    {"hit",                 makeAnimation("assets/images/hit-effect.png",       11, 16, 16)},
 
-    {"player/idle", makeAnimation("assets/images/player_idle.png", 1, 16, 16)},
+    {"player_idle",         makeAnimation("assets/images/player_idle.png",      1, 16, 16)},
+    {"player_walk_rt",      makeAnimation("assets/images/player_walk_rt.png",   2, 16, 16)},
+    {"player_walk_lt",      makeAnimation("assets/images/player_walk_lt.png",   2, 16, 16)},
+    {"player_walk_uprt",    makeAnimation("assets/images/player_walk_uprt.png", 2, 16, 16)},
+    {"player_walk_uplt",    makeAnimation("assets/images/player_walk_uplt.png", 2, 16, 16)},
 };
 
 map<string, Texture> texture_register {
@@ -53,7 +57,7 @@ map<string, Font> font_register {
 };
 
 int main() {
-    RenderWindow window(sf::VideoMode(1500, 1400), "Test world");
+    RenderWindow window(sf::VideoMode(1500, 1400), "A cool dungeon game");
     window.setMouseCursorVisible(false);
 
     Sprite cursor(texture_register["cursor"]);
