@@ -13,6 +13,7 @@
 #include "AABB.hpp"
 #include "Player.hpp"
 #include "StatusBar.hpp"
+#include "Baddie.hpp"
 
 using namespace std;
 using namespace sf;
@@ -45,6 +46,8 @@ map<string, vector<Texture>> animation_register {
     {"player_walk_lt",      makeAnimation("assets/images/player_walk_lt.png",   2, 16, 16)},
     {"player_walk_uprt",    makeAnimation("assets/images/player_walk_uprt.png", 2, 16, 16)},
     {"player_walk_uplt",    makeAnimation("assets/images/player_walk_uplt.png", 2, 16, 16)},
+
+    {"ghost",               makeAnimation("assets/images/ghost.png",            4, 16, 16)},
 };
 
 map<string, Texture> texture_register {
@@ -73,8 +76,12 @@ int main() {
     ifstream level_file("levels/default/1.level", ios::in | ios::binary);
     if (!level_file.is_open()) return -1;
 
+    Entity test_ent(100, 100, 30, 30, 30, 30, 0, 0, 0, 0, NULL);
+
     Player player(Vector2f(100, 100), Weapon("Sword...", &texture_register["sword1"], 3, 100));
     World world(&level_file);
+
+    Baddie baddie(Vector2f(200, 200), 5, 3, 3, &player);
 
     StatusBar statbar(&player, &world);
 
@@ -83,7 +90,7 @@ int main() {
 
     while (window.isOpen()) {
         Time delta = deltaClock.restart();
-        
+
         sf::Event event;
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed)
@@ -98,6 +105,7 @@ int main() {
         cursor.setPosition((Vector2f)Mouse::getPosition(window));
 
         player.update(&delta, &global_clock, &world, &window, &cursor.getPosition());
+        baddie.update(&delta, &global_clock, &world, &window);
 
         window.clear(Color(0x181425ff));
 
@@ -105,6 +113,7 @@ int main() {
         for (Block block : world.collisions) window.draw(block.rect);
         window.draw(player.rect);
         window.draw(player.weapon.rect);
+        window.draw(baddie.rect);
 
         window.setView(window.getDefaultView());
         statbar.draw(&window);

@@ -35,4 +35,8 @@ inline Vector2f normalize(Vector2f vec) {
     return vec;
 }
 
+inline Vector2f normalize(float x, float y) {
+    return normalize(Vector2f(x, y));
+}
+
 #endif
