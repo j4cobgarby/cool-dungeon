@@ -12,7 +12,7 @@ Baddie::Baddie(Vector2f position,
     this->_following = following;
 }
 
-void Baddie::update(Time *delta, Clock *g_clock, World *world, RenderWindow *window) {
+void Baddie::update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, vector<Baddie> *baddies) {
     /**
      * Basically just move towards the player.
      */
@@ -52,6 +52,26 @@ void Baddie::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
         float bnormalx, bnormaly, bcollisiontime;
         bcollisiontime = SweptAABB(box, b, &bnormalx, &bnormaly);
         if (bcollisiontime != 1 && bcollisiontime < 1 && bcollisiontime < collisiontime && AABBCheck(broadphasebox, b)) {
+            collisiontime = bcollisiontime;
+            normalx = bnormalx;
+            normaly = bnormaly;
+        }
+    }
+
+    /** Also check for collision with the player */
+    float bnormalx, bnormaly, bcollisiontime;
+    bcollisiontime = SweptAABB(box, _following->box, &bnormalx, &bnormaly);
+    if (bcollisiontime != 1 && bcollisiontime < 1 && bcollisiontime < collisiontime && AABBCheck(broadphasebox, _following->box)) {
+        collisiontime = bcollisiontime;
+        normalx = bnormalx;
+        normaly = bnormaly;
+    }
+
+    /** .. And with other baddies */
+    for (int baddie_index = 0; baddie_index < baddies->size(); baddie_index++) {
+        float bnormalx, bnormaly, bcollisiontime;
+        bcollisiontime = SweptAABB(box, baddies->at(baddie_index).box, &bnormalx, &bnormaly);
+        if (bcollisiontime != 1 && bcollisiontime < 1 && bcollisiontime < collisiontime && AABBCheck(broadphasebox, baddies->at(baddie_index).box)) {
             collisiontime = bcollisiontime;
             normalx = bnormalx;
             normaly = bnormaly;

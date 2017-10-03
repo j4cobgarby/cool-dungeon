@@ -5,6 +5,7 @@
 #include <iostream>
 #include <map>
 #include <string>
+#include <vector>
 
 #include "Entity.hpp"
 #include "asset_registers.hpp"
@@ -13,6 +14,9 @@
 #include "Maths.hpp"
 
 #define SPEED 30
+
+using namespace std;
+using namespace sf;
 
 class Weapon {
 public:

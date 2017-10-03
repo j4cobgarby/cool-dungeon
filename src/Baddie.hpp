@@ -9,6 +9,9 @@
 #include "asset_registers.hpp"
 #include "AABB.hpp"
 
+using namespace std;
+using namespace sf;
+
 class Baddie : public Entity {
 private:
     bool _u=true,_d=true,_l=true,_r=true;
@@ -21,7 +24,7 @@ public:
     unsigned int attack;
     unsigned int defense;
 
-    void update(Time *delta, Clock *g_clock, World *world, RenderWindow *window);
+    void update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, vector<Baddie> *baddies);
 };
 
 #endif

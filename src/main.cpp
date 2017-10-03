@@ -78,10 +78,12 @@ int main() {
 
     Entity test_ent(100, 100, 30, 30, 30, 30, 0, 0, 0, 0, NULL);
 
-    Player player(Vector2f(100, 100), Weapon("Sword...", &texture_register["sword1"], 3, 100));
+    Player player(Vector2f(100, 100), Weapon("A cool sword", &texture_register["sword1"], 3, 100));
     World world(&level_file);
 
-    Baddie baddie(Vector2f(200, 200), 5, 3, 3, &player);
+    vector<Baddie> baddies;
+    baddies.push_back(Baddie(Vector2f(500, 50), 5, 3, 3, &player));
+    baddies.push_back(Baddie(Vector2f(500, 150), 5, 3, 3, &player));
 
     StatusBar statbar(&player, &world);
 
@@ -105,7 +107,8 @@ int main() {
         cursor.setPosition((Vector2f)Mouse::getPosition(window));
 
         player.update(&delta, &global_clock, &world, &window, &cursor.getPosition());
-        baddie.update(&delta, &global_clock, &world, &window);
+        for (size_t i = 0; i < baddies.size(); i++)
+            baddies[i].update(&delta, &global_clock, &world, &window, &baddies);
 
         window.clear(Color(0x181425ff));
 
@@ -113,7 +116,8 @@ int main() {
         for (Block block : world.collisions) window.draw(block.rect);
         window.draw(player.rect);
         window.draw(player.weapon.rect);
-        window.draw(baddie.rect);
+        for (Baddie baddie : baddies)
+            window.draw(baddie.rect);
 
         window.setView(window.getDefaultView());
         statbar.draw(&window);

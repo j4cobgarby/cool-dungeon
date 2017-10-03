@@ -137,6 +137,11 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
 
     Vector2f perceived_mouse_position = window->mapPixelToCoords((Vector2i)*cursor_pos);
 
+    if (perceived_mouse_position.x > box.x)
+        facing = d_right;
+    else
+        facing = d_left;
+
     float middle_x = box.x + box.w/2;
     float middle_y = box.y + box.h/2;
 
