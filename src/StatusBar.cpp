@@ -1,4 +1,4 @@
-#include "StatusBar.hpp"
+#include "include/StatusBar.hpp"
 
 StatusBar::StatusBar(Player *player, World *world) {
     this->_player = player;
@@ -37,9 +37,9 @@ void StatusBar::draw(RenderWindow *window) {
     for (array<string, 2> stat : _stat_dat) {
         window->draw(make_stat_text(
             Vector2f(
-                bar_topleft.x + STAT_OFFSET + STAT_REL_OFFSET*_stat_ind, 
+                bar_topleft.x + STAT_OFFSET + STAT_REL_OFFSET*_stat_ind,
                 bar_topleft.y + 10
-            ), 
+            ),
             stat.at(0), _player->stats[stat.at(1)]
         ));
         ++_stat_ind;

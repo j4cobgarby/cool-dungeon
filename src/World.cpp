@@ -1,4 +1,4 @@
-#include "World.hpp"
+#include "include/World.hpp"
 
 using namespace std;
 
@@ -7,7 +7,7 @@ World::World(ifstream *file) {
      * Read a world from the file and populate the collisions and
      * background vectors.
      */
-    
+
     const unsigned short int width_offset = 0x03;
     const unsigned short int height_offset = 0x04;
     const unsigned short int lvl_offset = 0x05;

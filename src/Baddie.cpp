@@ -1,7 +1,7 @@
-#include "Baddie.hpp"
+#include "include/Baddie.hpp"
 
-Baddie::Baddie(Vector2f position, 
-    const unsigned int health, const unsigned int attack, const unsigned int defense, 
+Baddie::Baddie(Vector2f position,
+    const unsigned int health, const unsigned int attack, const unsigned int defense,
     Entity *following) : Entity(
     position.x, position.y, 30, 30, 30, 30, 0, 0, 0, 0, NULL
 ) {

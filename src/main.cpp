@@ -5,15 +5,11 @@
 #include <cstdlib>
 #include <cstdarg>
 
-#include "Entity.hpp"
-#include "World.hpp"
-#include "Block.hpp"
-#include "asset_registers.hpp"
-#include "Maths.hpp"
-#include "AABB.hpp"
-#include "Player.hpp"
-#include "StatusBar.hpp"
-#include "Baddie.hpp"
+#include "include/World.hpp"
+#include "include/asset_registers.hpp"
+#include "include/Player.hpp"
+#include "include/StatusBar.hpp"
+#include "include/Baddie.hpp"
 
 using namespace std;
 using namespace sf;
