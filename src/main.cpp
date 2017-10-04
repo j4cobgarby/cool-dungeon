@@ -31,7 +31,7 @@ map<int, Texture> init_tilemap_register(const string filename,
 }
 
 /** Populate texture register */
-map<int, Texture> tilemap_register = init_tilemap_register("assets/images/tilemap.png", 5, 5, 16, 16);
+map<int, Texture> tilemap_register = init_tilemap_register("assets/images/tilemap.png", 16, 16, 16, 16);
 
 map<string, vector<Texture>> animation_register {
     {"explode",             makeAnimation("assets/images/explode.png",          16, 16, 16)},

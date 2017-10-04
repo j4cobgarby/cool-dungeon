@@ -65,7 +65,7 @@ int main() {
 
     string tilemap_path = "../assets/images/tilemap.png";
 
-    unsigned int tilesx = 5, tilesy  = 5, tilewidth = 16, tileheight = 16;
+    unsigned int tilesx = 16, tilesy  = 16, tilewidth = 16, tileheight = 16;
 
     map<int, Texture> tilemap = init_tilemap_register(tilemap_path, tilesx, tilesy, tilewidth, tileheight);
     int c_id = 1;
