@@ -10,6 +10,7 @@
 #include "include/Player.hpp"
 #include "include/StatusBar.hpp"
 #include "include/Baddie.hpp"
+#include "include/BaddieTypes.hpp"
 
 using namespace std;
 using namespace sf;
@@ -78,8 +79,7 @@ int main() {
     World world(&level_file);
 
     vector<Baddie> baddies;
-    baddies.push_back(Baddie(Vector2f(500, 50), 5, 3, 3, &player));
-    baddies.push_back(Baddie(Vector2f(500, 150), 5, 3, 3, &player));
+    baddies.push_back(Ghost(Vector2f(500, 60), &player));
 
     StatusBar statbar(&player, &world);
 
