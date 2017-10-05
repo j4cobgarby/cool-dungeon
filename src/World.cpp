@@ -27,8 +27,6 @@ World::World(ifstream *file) {
         if (index == lvl_offset) break;
     }
 
-    cout << w * h << endl;
-
     char *collisions_data = new char[w * h];
     char *background_data = new char[w * h];
 

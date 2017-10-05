@@ -4,6 +4,7 @@
 #include <map>
 #include <string>
 #include <SFML/Graphics.hpp>
+#include <iostream>
 
 using namespace std;
 using namespace sf;
@@ -28,7 +29,7 @@ inline Font makeFont(const string filename) {
 
 /**
  * Returns a vector of Textures to describe an animation.
- * 
+ *
  * The file which `filename` refers to must contain `frames` frames, all
  * `frame_width`px wide and `frame_height`px tall, in a straight horizontal
  * line with no offset and no padding.
@@ -41,8 +42,21 @@ inline vector<Texture> makeAnimation(const string filename, const unsigned short
         _tmp.loadFromFile(filename, IntRect(_frame_index * frame_width, 0, frame_width, frame_height));
         ret.push_back(_tmp);
     }
-
     return ret;
+}
+
+inline map<int, Texture> init_tilemap_register(const string filename,
+        const unsigned int tiles_x, const unsigned int tiles_y, // Amount of tiles on each axis
+        const unsigned int tile_width, const unsigned int tile_height) { // Width in px of each tile texture
+    map<int, Texture> reg;
+    unsigned short int index = 1;
+    for (unsigned int y = 0; y < tiles_y; y++) {
+        for (unsigned int x = 0; x < tiles_x; x++) {
+            reg[index] = makeTexture(filename, IntRect(tile_width*x, tile_height*y, tile_width, tile_height));
+            index++;
+        }
+    }
+    return reg;
 }
 
 extern map<int, Texture>            tilemap_register;

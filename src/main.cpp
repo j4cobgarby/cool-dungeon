@@ -15,22 +15,7 @@
 using namespace std;
 using namespace sf;
 
-map<int, Texture> init_tilemap_register(const string filename,
-        const unsigned int tiles_x, const unsigned int tiles_y, // Amount of tiles on each axis
-        const unsigned int tile_width, const unsigned int tile_height) { // Width in px of each tile texture
-    map<int, Texture> reg;
-    unsigned short int index = 1;
-    for (unsigned int y = 0; y < tiles_y; y++) {
-        for (unsigned int x = 0; x < tiles_x; x++) {
-            cout << "Texture register " << index << " => " << filename << ":" << tile_width*x << ":" << tile_height*y << '\n';
-            reg[index] = makeTexture(filename, IntRect(tile_width*x, tile_height*y, tile_width, tile_height));
-            index++;
-        }
-    }
-    return reg;
-}
-
-/** Populate texture register */
+/** Populate registers */
 map<int, Texture> tilemap_register = init_tilemap_register("assets/images/tilemap.png", 16, 16, 16, 16);
 
 map<string, vector<Texture>> animation_register {
