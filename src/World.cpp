@@ -29,9 +29,21 @@ World::World(ifstream *file) {
 
     char *collisions_data = new char[w * h];
     char *background_data = new char[w * h];
+    char *spawn_data      = new char[2];
+    char *exit_data       = new char[2];
 
     file->get(collisions_data, w * h+1);
-    file->get(background_data, w * h);
+    file->get(background_data, w * h+1);
+    //file->seekg(w*h*2 + 5);
+    spawn_data[0] = file->get();
+    spawn_data[1] = file->get();
+    exit_data[0] = file->get();
+    exit_data[1] = file->get();
+
+    cout << (int)spawn_data[0] << " " << (int)spawn_data[1] << " <=" << endl;
+
+    spawn_position = Vector2f(spawn_data[0] * 50, spawn_data[1] * 50);
+    exit_position  = Vector2f(exit_data[0] * 50, exit_data[1] * 50);
 
     for (unsigned int y = 0; y < h; y++) {
         for (unsigned int x = 0; x < w; x++) {

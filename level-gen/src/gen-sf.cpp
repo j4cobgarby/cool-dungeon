@@ -112,6 +112,10 @@ int main() {
                     current_block.setFillColor(Color::Yellow);
                     blocks.at(b_index) = c_id;
                 }
+				if (Mouse::isButtonPressed(Mouse::Right)) {	// Right click to erase block
+					current_block.setFillColor(Color::Yellow);
+					blocks.at(b_index) = 0;
+				}
             } else {
                 current_block.setOutlineColor(Color(0x686868ff));
             }
@@ -131,16 +135,37 @@ int main() {
         window.display();
     }
 
-    
+
     for (int i = 0; i < blocks.size(); i++) {
         outfile.put(blocks.at(i));
     }
     for (int i = 0; i < blocks.size(); i++) {
-        outfile.put(18);
-        //outfile.put(1);
+        outfile.put(0);
     }
 
+	// Structure of data after the tile data:
+	//
+	// spawn x
+	// spawn y
+	// exit position x
+	// exit position y
+
+    cout << "spawnx<ENTER>spawny<ENTER>exitx<ENTER>exity<ENTER>\n";
+
+    unsigned int sx, sy, ex, ey;
+    cin >> sx;
+    cin >> sy;
+    cin >> ex;
+    cin >> ey;
+
+	outfile.put(sx);
+	outfile.put(sy);
+
+	outfile.put(ex);
+	outfile.put(ey);
+
     cout << "Success!" << endl;
+    system("pause");
 }
 
 /*
