@@ -33,10 +33,12 @@ public:
 
 class Player : public Entity {
 private:
-    bool _u=true,_d=true,_l=true,_r=true;
+    bool _u = true, _d = true, _l = true, _r = true;
+    bool _hitting = false;
 
     Direction facing = d_right;
     Clock _score_timer;
+    Clock _hit_cooldown_timer;
 public:
     Player(Vector2f position, Weapon weapon);
 

@@ -6,10 +6,10 @@ Weapon::Weapon(string display_name, Texture *tex, unsigned short int damage, uns
     this->display_name = display_name;
 
     this->rect.setPosition(Vector2f(0, 0));
-    this->rect.setSize(Vector2f(30, 30));
-    this->rect.setOrigin(Vector2f(0, 30)); // Bottom left origin
+    this->rect.setSize(Vector2f(35, 35));
+    this->rect.setOrigin(Vector2f(rect.getSize().x/2, rect.getSize().y/2)); // Bottom left origin
     this->rect.setTexture(tex);
-    this->rect.setRotation(-45); // Pointing up
+    //this->rect.setRotation(360); // Pointing up
 
     this->damage = damage;
     this->range = range;
@@ -75,6 +75,10 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
     rect.setTexture(&animation_register[animation_key].at(
         (g_clock->getElapsedTime().asMilliseconds() / elapsed_time_divisor) % animation_register[animation_key].size()));
 
+    weapon.rect.setTexture(&animation_register["swipe"].at(
+        (g_clock->getElapsedTime().asMilliseconds() / 50) % animation_register["swipe"].size()));
+    //weapon.rect.setTexture(NULL);
+
     box.vx *= 0.9;
     box.vy *= 0.9;
 
@@ -137,7 +141,7 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
 
     Vector2f perceived_mouse_position = window->mapPixelToCoords((Vector2i)*cursor_pos);
 
-    if (perceived_mouse_position.x > box.x)
+    if (perceived_mouse_position.x > box.x + box.w/2)
         facing = d_right;
     else
         facing = d_left;
@@ -148,14 +152,10 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
     Vector2f diff(middle_x - perceived_mouse_position.x, middle_y - perceived_mouse_position.y);
     diff = normalize(diff);
 
-    weapon.rect.setRotation(lerpangle(
-        weapon.rect.getRotation(),
-        (atan2(diff.y, diff.x) * 180/PI) + 225,
-        delta->asSeconds() * 20
-    ));
+    weapon.rect.setRotation((atan2(diff.y, diff.x) * 180/PI) - 90);
     weapon.rect.setPosition(Vector2f(
-        middle_x - diff.x*20,
-        middle_y - diff.y*20
+        middle_x - diff.x*35,
+        middle_y - diff.y*35
     ));
 }
 

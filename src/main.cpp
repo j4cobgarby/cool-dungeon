@@ -21,6 +21,8 @@ map<int, Texture> tilemap_register = init_tilemap_register("assets/images/tilema
 map<string, vector<Texture>> animation_register {
     {"explode",             makeAnimation("assets/images/explode.png",          16, 16, 16)},
     {"hit",                 makeAnimation("assets/images/hit-effect.png",       11, 16, 16)},
+    {"swipe",               makeAnimation("assets/images/swipe.png",            12, 16, 16)},
+    {"jab",                 makeAnimation("assets/images/jab.png",              14, 16, 16)},
 
     {"player_idle_rt",      makeAnimation("assets/images/player_idle_rt.png",   1, 16, 16)},
     {"player_idle_lt",      makeAnimation("assets/images/player_idle_lt.png",   1, 16, 16)},
@@ -93,7 +95,7 @@ int main() {
         window.draw(player.rect);
         window.draw(player.weapon.rect);
         for (Baddie baddie : baddies)
-            window.draw(baddie.rect);
+            //window.draw(baddie.rect);
 
         window.setView(window.getDefaultView());
         statbar.draw(&window);
