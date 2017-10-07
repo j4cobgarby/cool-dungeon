@@ -15,6 +15,9 @@ public:
 
     std::vector<Block> collisions;
     std::vector<Block> background;
+
+    sf::Vector2f spawn_position;
+    sf::Vector2f exit_position;
 };
 
 #endif

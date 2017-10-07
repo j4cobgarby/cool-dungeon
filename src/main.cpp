@@ -44,32 +44,27 @@ map<string, Font> font_register {
 
 int main() {
     RenderWindow window(sf::VideoMode(1500, 1400), "A cool dungeon game");
-    window.setMouseCursorVisible(false);
-
-    srand(time(NULL));
-
     Sprite cursor(texture_register["cursor"]);
-    cursor.setScale(8, 8);
-
     View player_view(Vector2f(200, 200), Vector2f(1500, 1400));
-    player_view.zoom(0.2);
-    window.setView(player_view);
-
     ifstream level_file("levels/default/1.level", ios::in | ios::binary);
-    if (!level_file.is_open()) return -1;
-
     Entity test_ent(100, 100, 30, 30, 30, 30, 0, 0, 0, 0, NULL);
-
-    Player player(Vector2f(100, 100), Weapon("A cool sword", &texture_register["sword1"], 3, 100));
     World world(&level_file);
-
-    vector<Baddie> baddies;
-    baddies.push_back(Ghost(Vector2f(500, 60), &player));
-
+    Player player(world.spawn_position, Weapon("A cool sword", &texture_register["sword1"], 3, 100));
     StatusBar statbar(&player, &world);
+    window.setMouseCursorVisible(false);
+    vector<Baddie> baddies;
 
     Clock global_clock;
     Clock deltaClock;
+
+    srand(time(NULL));
+
+    cursor.setScale(8, 8);
+    player_view.zoom(0.2);
+    window.setView(player_view);
+    baddies.push_back(Ghost(Vector2f(500, 60), &player));
+
+    if (!level_file.is_open()) return -1;
 
     while (window.isOpen()) {
         Time delta = deltaClock.restart();
