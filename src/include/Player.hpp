@@ -15,8 +15,6 @@
 #include "Maths.hpp"
 #include "Animation.hpp"
 
-#define SPEED 20
-
 using namespace std;
 using namespace sf;
 
@@ -42,6 +40,7 @@ class Player : public Entity {
 private:
     bool _u = true, _d = true, _l = true, _r = true;
     bool _hitting = false;
+    const unsigned short int _speed = 20;
 
     Direction facing = d_right;
     Clock _score_timer;

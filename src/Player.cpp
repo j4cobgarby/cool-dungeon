@@ -38,13 +38,13 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
 
     if (!_hitting) {
         if (Keyboard::isKeyPressed(Keyboard::A) && _l) {
-            box.vx -= delta->asSeconds() * SPEED;
+            box.vx -= delta->asSeconds() * _speed;
         } if (Keyboard::isKeyPressed(Keyboard::D) && _r) {
-            box.vx += delta->asSeconds() * SPEED;
+            box.vx += delta->asSeconds() * _speed;
         } if (Keyboard::isKeyPressed(Keyboard::W) && _u) {
-            box.vy -= delta->asSeconds() * SPEED;
+            box.vy -= delta->asSeconds() * _speed;
         } if (Keyboard::isKeyPressed(Keyboard::S) && _d) {
-            box.vy += delta->asSeconds() * SPEED;
+            box.vy += delta->asSeconds() * _speed;
         }
 
         anim.set_key(facing == d_right ? "player_idle_rt" : "player_idle_lt");
