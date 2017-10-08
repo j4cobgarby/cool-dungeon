@@ -6,13 +6,15 @@ Weapon::Weapon(string display_name, Texture *tex, unsigned short int damage, uns
     this->display_name = display_name;
 
     this->rect.setPosition(Vector2f(0, 0));
-    this->rect.setSize(Vector2f(35, 35));
-    this->rect.setOrigin(Vector2f(rect.getSize().x/2, rect.getSize().y/2)); // Bottom left origin
+    this->rect.setSize(Vector2f(45, 45));
+    this->rect.setOrigin(Vector2f(rect.getSize().x/2, rect.getSize().y/2));
     this->rect.setTexture(tex);
     //this->rect.setRotation(360); // Pointing up
 
     this->damage = damage;
     this->range = range;
+
+    anim = Animation("swipe", 50);
 }
 
 Player::Player(Vector2f position, Weapon weapon) :
@@ -25,6 +27,8 @@ Player::Player(Vector2f position, Weapon weapon) :
         {
 
     this->weapon = weapon;
+    
+    anim = Animation("player_idle_rt", 200);
 }
 
 void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, const Vector2f *cursor_pos) {
@@ -43,41 +47,36 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
         box.vy += delta->asSeconds() * SPEED;
     }
 
-    int elapsed_time_divisor = 200;
-    string animation_key = (facing == d_right ? "player_idle_rt" : "player_idle_lt");
+    anim.set_key(facing == d_right ? "player_idle_rt" : "player_idle_lt");
 
     if (Keyboard::isKeyPressed(Keyboard::W)) {
-        animation_key = (facing == d_right ? "player_walk_uprt" : "player_walk_uplt");
+        anim.set_key((facing == d_right ? "player_walk_uprt" : "player_walk_uplt"));
     }
     if (Keyboard::isKeyPressed(Keyboard::S)) {
-        animation_key = (facing == d_right ? "player_walk_rt" : "player_walk_lt");
+        anim.set_key((facing == d_right ? "player_walk_rt" : "player_walk_lt"));
     }
     if (Keyboard::isKeyPressed(Keyboard::A)) {
         facing = d_left;
         if (Keyboard::isKeyPressed(Keyboard::W)) {
             /** Up/left */
-            animation_key = "player_walk_uplt";
+            anim.set_key("player_walk_uplt");
         } else {
             /** Left */
-            animation_key = "player_walk_lt";
+            anim.set_key("player_walk_lt");
         }
     } if (Keyboard::isKeyPressed(Keyboard::D)) {
         facing = d_right;
         if (Keyboard::isKeyPressed(Keyboard::W)) {
             /** Up/right */
-            animation_key = "player_walk_uprt";
+            anim.set_key("player_walk_uprt");
         } else {
             /** Right */
-            animation_key = "player_walk_rt";
+            anim.set_key("player_walk_rt");
         }
     }
 
-    rect.setTexture(&animation_register[animation_key].at(
-        (g_clock->getElapsedTime().asMilliseconds() / elapsed_time_divisor) % animation_register[animation_key].size()));
-
-    weapon.rect.setTexture(&animation_register["swipe"].at(
-        (g_clock->getElapsedTime().asMilliseconds() / 50) % animation_register["swipe"].size()));
-    //weapon.rect.setTexture(NULL);
+    rect.setTexture(anim.get_frame(g_clock));
+    weapon.update_texture(g_clock);
 
     box.vx *= 0.9;
     box.vy *= 0.9;
@@ -154,8 +153,8 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
 
     weapon.rect.setRotation((atan2(diff.y, diff.x) * 180/PI) - 90);
     weapon.rect.setPosition(Vector2f(
-        middle_x - diff.x*35,
-        middle_y - diff.y*35
+        middle_x - diff.x*weapon.rect.getSize().y,
+        middle_y - diff.y*weapon.rect.getSize().y
     ));
 }
 

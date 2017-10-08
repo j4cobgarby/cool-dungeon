@@ -12,6 +12,7 @@
 #include "AABB.hpp"
 #include "World.hpp"
 #include "Maths.hpp"
+#include "Animation.hpp"
 
 #define SPEED 30
 
@@ -19,6 +20,9 @@ using namespace std;
 using namespace sf;
 
 class Weapon {
+private:
+    Animation anim;
+
 public:
     Weapon();
     Weapon(string display_name, Texture *tex, unsigned short int damage, unsigned short int range);
@@ -29,6 +33,8 @@ public:
     /** Stats */
     unsigned short int damage;
     unsigned short int range;
+
+    void update_texture(Clock *g_clock) {rect.setTexture(anim.get_frame(g_clock));}
 };
 
 class Player : public Entity {
@@ -39,6 +45,7 @@ private:
     Direction facing = d_right;
     Clock _score_timer;
     Clock _hit_cooldown_timer;
+    Animation anim;
 public:
     Player(Vector2f position, Weapon weapon);
 
