@@ -95,7 +95,7 @@ int main() {
         window.draw(player.rect);
         window.draw(player.weapon.rect);
         for (Baddie baddie : baddies)
-            //window.draw(baddie.rect);
+            window.draw(baddie.rect);
 
         window.setView(window.getDefaultView());
         statbar.draw(&window);
