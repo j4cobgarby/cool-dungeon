@@ -9,12 +9,11 @@ Weapon::Weapon(string display_name, Texture *tex, unsigned short int damage, uns
     this->rect.setSize(Vector2f(45, 45));
     this->rect.setOrigin(Vector2f(rect.getSize().x/2, rect.getSize().y/2));
     this->rect.setTexture(tex);
-    //this->rect.setRotation(360); // Pointing up
 
     this->damage = damage;
     this->range = range;
 
-    anim = Animation("swipe", 50);
+    anim = Animation("swipe", 45);
 }
 
 Player::Player(Vector2f position, Weapon weapon) :
@@ -37,46 +36,48 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
         stats["sco"]++;
     }
 
-    if (Keyboard::isKeyPressed(Keyboard::A) && _l) {
-        box.vx -= delta->asSeconds() * SPEED;
-    } if (Keyboard::isKeyPressed(Keyboard::D) && _r) {
-        box.vx += delta->asSeconds() * SPEED;
-    } if (Keyboard::isKeyPressed(Keyboard::W) && _u) {
-        box.vy -= delta->asSeconds() * SPEED;
-    } if (Keyboard::isKeyPressed(Keyboard::S) && _d) {
-        box.vy += delta->asSeconds() * SPEED;
-    }
-
-    anim.set_key(facing == d_right ? "player_idle_rt" : "player_idle_lt");
-
-    if (Keyboard::isKeyPressed(Keyboard::W)) {
-        anim.set_key((facing == d_right ? "player_walk_uprt" : "player_walk_uplt"));
-    }
-    if (Keyboard::isKeyPressed(Keyboard::S)) {
-        anim.set_key((facing == d_right ? "player_walk_rt" : "player_walk_lt"));
-    }
-    if (Keyboard::isKeyPressed(Keyboard::A)) {
-        facing = d_left;
-        if (Keyboard::isKeyPressed(Keyboard::W)) {
-            /** Up/left */
-            anim.set_key("player_walk_uplt");
-        } else {
-            /** Left */
-            anim.set_key("player_walk_lt");
+    if (!_hitting) {
+        if (Keyboard::isKeyPressed(Keyboard::A) && _l) {
+            box.vx -= delta->asSeconds() * SPEED;
+        } if (Keyboard::isKeyPressed(Keyboard::D) && _r) {
+            box.vx += delta->asSeconds() * SPEED;
+        } if (Keyboard::isKeyPressed(Keyboard::W) && _u) {
+            box.vy -= delta->asSeconds() * SPEED;
+        } if (Keyboard::isKeyPressed(Keyboard::S) && _d) {
+            box.vy += delta->asSeconds() * SPEED;
         }
-    } if (Keyboard::isKeyPressed(Keyboard::D)) {
-        facing = d_right;
+
+        anim.set_key(facing == d_right ? "player_idle_rt" : "player_idle_lt");
+        
         if (Keyboard::isKeyPressed(Keyboard::W)) {
-            /** Up/right */
-            anim.set_key("player_walk_uprt");
-        } else {
-            /** Right */
-            anim.set_key("player_walk_rt");
+            anim.set_key((facing == d_right ? "player_walk_uprt" : "player_walk_uplt"));
+        }
+        if (Keyboard::isKeyPressed(Keyboard::S)) {
+            anim.set_key((facing == d_right ? "player_walk_rt" : "player_walk_lt"));
+        }
+        if (Keyboard::isKeyPressed(Keyboard::A)) {
+            facing = d_left;
+            if (Keyboard::isKeyPressed(Keyboard::W)) {
+                /** Up/left */
+                anim.set_key("player_walk_uplt");
+            } else {
+                /** Left */
+                anim.set_key("player_walk_lt");
+            }
+        } if (Keyboard::isKeyPressed(Keyboard::D)) {
+            facing = d_right;
+            if (Keyboard::isKeyPressed(Keyboard::W)) {
+                /** Up/right */
+                anim.set_key("player_walk_uprt");
+            } else {
+                /** Right */
+                anim.set_key("player_walk_rt");
+            }
         }
     }
 
     rect.setTexture(anim.get_frame(g_clock));
-    weapon.update_texture(g_clock);
+    weapon.update_texture(&_hit_timer);
 
     box.vx *= 0.9;
     box.vy *= 0.9;
@@ -145,19 +146,35 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
     else
         facing = d_left;
 
-    float middle_x = box.x + box.w/2;
-    float middle_y = box.y + box.h/2;
+    if (!_hitting) {
+        float middle_x = box.x + box.w/2;
+        float middle_y = box.y + box.h/2;
 
-    Vector2f diff(middle_x - perceived_mouse_position.x, middle_y - perceived_mouse_position.y);
-    diff = normalize(diff);
+        Vector2f diff(middle_x - perceived_mouse_position.x, middle_y - perceived_mouse_position.y);
+        diff = normalize(diff);
 
-    weapon.rect.setRotation((atan2(diff.y, diff.x) * 180/PI) - 90);
-    weapon.rect.setPosition(Vector2f(
-        middle_x - diff.x*weapon.rect.getSize().y,
-        middle_y - diff.y*weapon.rect.getSize().y
-    ));
+        weapon.rect.setRotation((atan2(diff.y, diff.x) * 180/PI) - 90);
+        weapon.rect.setPosition(Vector2f(
+            middle_x - diff.x*weapon.rect.getSize().y,
+            middle_y - diff.y*weapon.rect.getSize().y
+        ));
+        weapon.rect.setFillColor(Color(0xffffff00));
+    } else {
+        weapon.rect.setFillColor(Color(0xffffffff));
+        if (_hit_timer.getElapsedTime().asSeconds() > 0.5) {
+            _hitting = false;
+            cout << "Stopped hitting" << endl;
+            weapon.rect.setFillColor(Color(0xffffff00));
+        }
+    }
 }
 
 void Player::click(Time *delta, World *world, RenderWindow *window) {
     cout << "Clicked" << endl;
+    cout << "time: " << _hit_timer.getElapsedTime().asSeconds() << endl;
+    if (_hit_timer.getElapsedTime().asSeconds() > 0.5) {
+        _hitting = true;
+        _hit_timer.restart();
+    }
+    cout << _hitting << endl;
 }

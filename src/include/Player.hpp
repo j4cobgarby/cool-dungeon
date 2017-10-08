@@ -6,6 +6,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <thread>
 
 #include "Entity.hpp"
 #include "asset_registers.hpp"
@@ -14,7 +15,7 @@
 #include "Maths.hpp"
 #include "Animation.hpp"
 
-#define SPEED 30
+#define SPEED 20
 
 using namespace std;
 using namespace sf;
@@ -44,7 +45,7 @@ private:
 
     Direction facing = d_right;
     Clock _score_timer;
-    Clock _hit_cooldown_timer;
+    Clock _hit_timer;
     Animation anim;
 public:
     Player(Vector2f position, Weapon weapon);
