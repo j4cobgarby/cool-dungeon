@@ -21,9 +21,9 @@ void Baddie::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
      * Basically just move towards the player.
      */
 
-     rect.setTexture(&animation_register[_animation_key].at(
-         (g_clock->getElapsedTime().asMilliseconds() / 300) % animation_register[_animation_key].size()
-     ));
+    rect.setTexture(&animation_register[_animation_key].at(
+        (g_clock->getElapsedTime().asMilliseconds() / 300) % animation_register[_animation_key].size()
+    ));
 
     // Calculate the delta x and y from the baddie to the entity the baddie's following
     float dx, dy;
@@ -36,6 +36,9 @@ void Baddie::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
     // apply velocity along this vector
     if ((direction.x < 0 && _l) || (direction.x > 0 && _r)) box.vx += direction.x * delta->asSeconds() * _speed;
     if ((direction.y < 0 && _u) || (direction.y > 0 && _d)) box.vy += direction.y * delta->asSeconds() * _speed;
+
+
+    
     box.vx *= 0.9;
     box.vy *= 0.9;
 
