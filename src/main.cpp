@@ -45,7 +45,7 @@ map<string, Font> font_register {
 };
 
 int main() {
-    RenderWindow window(sf::VideoMode(1500, 1400), "A cool dungeon game");
+    RenderWindow window(sf::VideoMode(1500, 1400), "A cool dungeon game", Style::None | Style::Titlebar | Style::Close);
     Sprite cursor(texture_register["cursor"]);
     View player_view(Vector2f(200, 200), Vector2f(1500, 1400));
     ifstream level_file("levels/default/1.level", ios::in | ios::binary);
