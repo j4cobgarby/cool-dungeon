@@ -39,16 +39,16 @@ public:
 class Player : public Entity {
 private:
     bool _u = true, _d = true, _l = true, _r = true;
-    bool _hitting = false;
     const unsigned short int _speed = 20;
 
     Direction facing = d_right;
     Clock _score_timer;
     Clock _hit_timer;
     Animation anim;
+    vector<Baddie> *_baddies;
 public:
+    bool _hitting = false;
     Player(Vector2f position, Weapon weapon);
-
     Weapon weapon;
 
     map<string, short int> stats {
@@ -59,6 +59,7 @@ public:
         {"sco", 0},
     };
 
+    void set_baddies(vector<Baddie> *baddies) {_baddies = baddies;}
     void update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, const Vector2f *cursor_pos);
     void click(Time *delta, World *world, RenderWindow *window);
 };

@@ -166,11 +166,21 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
 }
 
 void Player::click(Time *delta, World *world, RenderWindow *window) {
-    cout << "Clicked" << endl;
-    cout << "time: " << _hit_timer.getElapsedTime().asSeconds() << endl;
     if (_hit_timer.getElapsedTime().asSeconds() > 0.4) { // <- The hit cooldown time
         _hitting = true;
         _hit_timer.restart();
     }
-    cout << _hitting << endl;
+
+    for (size_t b_index = 0; b_index < _baddies->size(); b_index++) {
+        float angle_to_enemy = angleVecToVec(Vector2f(box.x, box.y), _baddies->at(b_index).rect.getPosition());
+
+        float min_hit_angle = weapon.rect.getRotation() - 20 - 90;
+        float max_hit_angle = weapon.rect.getRotation() + 20 - 90;
+
+        if (min_hit_angle <= angle_to_enemy && angle_to_enemy <= max_hit_angle && 
+            vectorDist(Vector2f(box.x, box.y), _baddies->at(b_index).rect.getPosition()) <= 50) {
+            _baddies->at(b_index).health -= weapon.damage;
+            if (_baddies->at(b_index).health < 0) _baddies->at(b_index).health = 0;
+        }
+    }
 }

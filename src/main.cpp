@@ -55,6 +55,7 @@ int main() {
     StatusBar statbar(&player, &world);
     window.setMouseCursorVisible(false);
     vector<Baddie> baddies;
+    player.set_baddies(&baddies);
 
     Clock global_clock;
     Clock deltaClock;
