@@ -13,7 +13,7 @@ Weapon::Weapon(string display_name, Texture *tex, unsigned short int damage, uns
     this->damage = damage;
     this->range = range;
 
-    anim = Animation("swipe", 20);
+    anim = Animation("swipe", HIT_DURATION * 100);
 }
 
 Player::Player(Vector2f position, Weapon weapon) :
@@ -158,19 +158,19 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
     ));
     if (!_hitting) weapon.rect.setFillColor(Color(0xffffff00));
     else weapon.rect.setFillColor(Color(0xffffffff));
-    if (_hitting && _hit_timer.getElapsedTime().asSeconds() > 0.2) { // <- Visually the time taken to hit
+    if (_hitting && _hit_timer.getElapsedTime().asSeconds() > HIT_DURATION) { // <- Visually the time taken to hit
         _hitting = false;
         cout << "Stopped hitting" << endl;
         weapon.rect.setFillColor(Color(0xffffff00));
     }
 
-    if (_hitting && _hit_timer.getElapsedTime().asSeconds() > (0.2 / 2) && !_hit_already) {
+    if (_hitting && _hit_timer.getElapsedTime().asSeconds() > (HIT_DURATION / 2) && !_hit_already) {
         for (size_t b_index = 0; b_index < _baddies->size(); b_index++) {
             float angle_to_enemy = angleVecToVec(Vector2f(box.x, box.y), _baddies->at(b_index).rect.getPosition());
             float angle_to_mouse = angleVecToVec(Vector2f(box.x + box.w / 2, box.y + box.h / 2), perceived_mouse_position);
 
-            float min_hit_angle = (weapon.rect.getRotation() - 45 - 90);
-            float max_hit_angle = (weapon.rect.getRotation() + 45 - 90);
+            float min_hit_angle = (weapon.rect.getRotation() - HIT_ANGLE_RANGE/2 - 90);
+            float max_hit_angle = (weapon.rect.getRotation() + HIT_ANGLE_RANGE/2 - 90);
 
             cout << abs(angle_to_enemy) << "\t" << min_hit_angle << "\t" << max_hit_angle << endl;
 
@@ -187,7 +187,7 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
 }
 
 void Player::click(Time *delta, World *world, RenderWindow *window) {
-    if (_hit_timer.getElapsedTime().asSeconds() > 0.2) { // <- The hit cooldown time
+    if (_hit_timer.getElapsedTime().asSeconds() > HIT_DURATION) { // <- The hit cooldown time
         _hitting = true;
         _hit_already = false;
         _hit_timer.restart();

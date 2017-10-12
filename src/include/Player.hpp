@@ -15,6 +15,9 @@
 #include "Maths.hpp"
 #include "Animation.hpp"
 
+#define HIT_DURATION 0.3    // seconds
+#define HIT_ANGLE_RANGE 90  // degrees
+
 using namespace std;
 using namespace sf;
 
