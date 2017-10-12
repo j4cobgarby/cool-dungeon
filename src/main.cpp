@@ -66,6 +66,7 @@ int main() {
     player_view.zoom(0.2);
     window.setView(player_view);
     baddies.push_back(Ghost(Vector2f(500, 60), &player));
+    baddies.push_back(Ghost(Vector2f(300, 60), &player));
 
     if (!level_file.is_open()) return -1;
 
@@ -86,8 +87,15 @@ int main() {
         cursor.setPosition((Vector2f)Mouse::getPosition(window));
 
         player.update(&delta, &global_clock, &world, &window, &cursor.getPosition());
-        for (size_t i = 0; i < baddies.size(); i++)
+        for (size_t i = 0; i < baddies.size(); i++) {
+            cout << baddies[i].health << endl;
+            if (baddies[i].health <= 0) {
+                baddies.erase(baddies.begin() + i);
+                i--;
+                continue;
+            }
             baddies[i].update(&delta, &global_clock, &world, &window, &baddies);
+        }
 
         window.clear(Color(0x181425ff));
 

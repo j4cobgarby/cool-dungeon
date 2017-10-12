@@ -26,7 +26,7 @@ Player::Player(Vector2f position, Weapon weapon) :
         {
 
     this->weapon = weapon;
-    
+
     anim = Animation("player_idle_rt", 200);
 }
 
@@ -47,7 +47,7 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
     }
 
     anim.set_key(facing == d_right ? "player_idle_rt" : "player_idle_lt");
-    
+
     if (Keyboard::isKeyPressed(Keyboard::W)) {
         anim.set_key((facing == d_right ? "player_walk_uprt" : "player_walk_uplt"));
     }
@@ -163,24 +163,29 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
         cout << "Stopped hitting" << endl;
         weapon.rect.setFillColor(Color(0xffffff00));
     }
+
+    if (_hitting && _hit_timer.getElapsedTime().asSeconds() > 0.2 && !_hit_already) {
+        for (size_t b_index = 0; b_index < _baddies->size(); b_index++) {
+            float angle_to_enemy = angleVecToVec(Vector2f(box.x, box.y), _baddies->at(b_index).rect.getPosition());
+
+            float min_hit_angle = weapon.rect.getRotation() - 20 - 90;
+            float max_hit_angle = weapon.rect.getRotation() + 20 - 90;
+
+            if (min_hit_angle <= angle_to_enemy && angle_to_enemy <= max_hit_angle &&
+                vectorDist(Vector2f(box.x, box.y), _baddies->at(b_index).rect.getPosition()) <= 50) {
+                _baddies->at(b_index).health -= weapon.damage;
+                if (_baddies->at(b_index).health < 0) _baddies->at(b_index).health = 0;
+            }
+        }
+
+        _hit_already = true;
+    }
 }
 
 void Player::click(Time *delta, World *world, RenderWindow *window) {
     if (_hit_timer.getElapsedTime().asSeconds() > 0.4) { // <- The hit cooldown time
         _hitting = true;
+        _hit_already = false;
         _hit_timer.restart();
-    }
-
-    for (size_t b_index = 0; b_index < _baddies->size(); b_index++) {
-        float angle_to_enemy = angleVecToVec(Vector2f(box.x, box.y), _baddies->at(b_index).rect.getPosition());
-
-        float min_hit_angle = weapon.rect.getRotation() - 20 - 90;
-        float max_hit_angle = weapon.rect.getRotation() + 20 - 90;
-
-        if (min_hit_angle <= angle_to_enemy && angle_to_enemy <= max_hit_angle && 
-            vectorDist(Vector2f(box.x, box.y), _baddies->at(b_index).rect.getPosition()) <= 50) {
-            _baddies->at(b_index).health -= weapon.damage;
-            if (_baddies->at(b_index).health < 0) _baddies->at(b_index).health = 0;
-        }
     }
 }

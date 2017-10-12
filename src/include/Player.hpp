@@ -46,6 +46,13 @@ private:
     Clock _hit_timer;
     Animation anim;
     vector<Baddie> *_baddies;
+
+    /**
+     * _hit_already
+     * Basically, this records whether or not, in this particular hit cycle,
+     * the damage to enemies has been done.
+     */
+    bool _hit_already = false;
 public:
     bool _hitting = false;
     Player(Vector2f position, Weapon weapon);
