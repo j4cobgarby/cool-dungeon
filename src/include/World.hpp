@@ -6,7 +6,6 @@
 #include <iostream>
 
 #include "Block.hpp"
-#include "Entity.hpp"
 #include "asset_registers.hpp"
 
 class World {

@@ -39,4 +39,12 @@ inline Vector2f normalize(float x, float y) {
     return normalize(Vector2f(x, y));
 }
 
+inline float angleVecToVec(Vector2f v1, Vector2f v2) {
+    return (float)atan2(v2.y - v1.y, v2.x - v1.x) * (180/PI);
+}
+
+inline float vectorDist(Vector2f v1, Vector2f v2) {
+    return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
+}
+
 #endif

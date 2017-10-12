@@ -21,6 +21,8 @@ map<int, Texture> tilemap_register = init_tilemap_register("assets/images/tilema
 map<string, vector<Texture>> animation_register {
     {"explode",             makeAnimation("assets/images/explode.png",          16, 16, 16)},
     {"hit",                 makeAnimation("assets/images/hit-effect.png",       11, 16, 16)},
+    {"swipe",               makeAnimation("assets/images/swipe.png",            12, 16, 16)},
+    {"jab",                 makeAnimation("assets/images/jab.png",              14, 16, 16)},
 
     {"player_idle_rt",      makeAnimation("assets/images/player_idle_rt.png",   1, 16, 16)},
     {"player_idle_lt",      makeAnimation("assets/images/player_idle_lt.png",   1, 16, 16)},
@@ -43,7 +45,7 @@ map<string, Font> font_register {
 };
 
 int main() {
-    RenderWindow window(sf::VideoMode(1500, 1400), "A cool dungeon game");
+    RenderWindow window(sf::VideoMode(1500, 1400), "A cool dungeon game", Style::None | Style::Titlebar | Style::Close);
     Sprite cursor(texture_register["cursor"]);
     View player_view(Vector2f(200, 200), Vector2f(1500, 1400));
     ifstream level_file("levels/default/1.level", ios::in | ios::binary);
@@ -53,6 +55,7 @@ int main() {
     StatusBar statbar(&player, &world);
     window.setMouseCursorVisible(false);
     vector<Baddie> baddies;
+    player.set_baddies(&baddies);
 
     Clock global_clock;
     Clock deltaClock;
@@ -63,6 +66,7 @@ int main() {
     player_view.zoom(0.2);
     window.setView(player_view);
     baddies.push_back(Ghost(Vector2f(500, 60), &player));
+    baddies.push_back(Ghost(Vector2f(300, 60), &player));
 
     if (!level_file.is_open()) return -1;
 
@@ -83,8 +87,14 @@ int main() {
         cursor.setPosition((Vector2f)Mouse::getPosition(window));
 
         player.update(&delta, &global_clock, &world, &window, &cursor.getPosition());
-        for (size_t i = 0; i < baddies.size(); i++)
+        for (size_t i = 0; i < baddies.size(); i++) {
+            if (baddies[i].health <= 0) {
+                baddies.erase(baddies.begin() + i);
+                i--;
+                continue;
+            }
             baddies[i].update(&delta, &global_clock, &world, &window, &baddies);
+        }
 
         window.clear(Color(0x181425ff));
 
