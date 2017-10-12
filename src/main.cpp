@@ -88,7 +88,6 @@ int main() {
 
         player.update(&delta, &global_clock, &world, &window, &cursor.getPosition());
         for (size_t i = 0; i < baddies.size(); i++) {
-            cout << baddies[i].health << endl;
             if (baddies[i].health <= 0) {
                 baddies.erase(baddies.begin() + i);
                 i--;
