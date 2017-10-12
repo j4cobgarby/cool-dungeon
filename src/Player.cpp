@@ -172,7 +172,7 @@ void Player::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
             float max_hit_angle = weapon.rect.getRotation() + 20 - 90;
 
             if (min_hit_angle <= angle_to_enemy && angle_to_enemy <= max_hit_angle &&
-                vectorDist(Vector2f(box.x, box.y), _baddies->at(b_index).rect.getPosition()) <= 50) {
+                vectorDist(Vector2f(box.x, box.y), _baddies->at(b_index).rect.getPosition()) <= 55) {
                 _baddies->at(b_index).health -= weapon.damage;
                 if (_baddies->at(b_index).health < 0) _baddies->at(b_index).health = 0;
             }
