@@ -40,10 +40,12 @@ public:
     Baddie() {}
     Baddie(Vector2f position, const unsigned int health, const unsigned int attack, const unsigned int defense, Entity *following, bool collides, float speed, string animation_key);
 
+    int maxhealth;
     int health;
     int attack;
     int defense;
 
+    void drawhealthbar(RenderWindow *window);
     void update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, vector<Baddie> *baddies);
 };
 

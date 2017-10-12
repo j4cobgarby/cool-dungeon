@@ -102,8 +102,10 @@ int main() {
         for (Block block : world.collisions) window.draw(block.rect);
         window.draw(player.rect);
         window.draw(player.weapon.rect);
-        for (Baddie baddie : baddies)
+        for (Baddie baddie : baddies) {
             window.draw(baddie.rect);
+            baddie.drawhealthbar(&window);
+        }
 
         window.setView(window.getDefaultView());
         statbar.draw(&window);
