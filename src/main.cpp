@@ -66,7 +66,7 @@ int main() {
     player_view.zoom(0.2);
     window.setView(player_view);
     baddies.push_back(Ghost(Vector2f(500, 60), &player));
-    baddies.push_back(Ghost(Vector2f(300, 60), &player));
+    //baddies.push_back(Ghost(Vector2f(300, 60), &player));
 
     if (!level_file.is_open()) return -1;
 
