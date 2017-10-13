@@ -5,6 +5,7 @@ Baddie::Baddie(Vector2f position,
     Entity *following, bool collides, float speed, string animation_key) : Entity(
     position.x, position.y, 30, 30, 30, 30, 0, 0, 0, 0, NULL
 ) {
+    this->maxhealth = health;
     this->health = health;
     this->attack = attack;
     this->defense = defense;
@@ -21,9 +22,9 @@ void Baddie::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
      * Basically just move towards the player.
      */
 
-     rect.setTexture(&animation_register[_animation_key].at(
-         (g_clock->getElapsedTime().asMilliseconds() / 300) % animation_register[_animation_key].size()
-     ));
+    rect.setTexture(&animation_register[_animation_key].at(
+        (g_clock->getElapsedTime().asMilliseconds() / 300) % animation_register[_animation_key].size()
+    ));
 
     // Calculate the delta x and y from the baddie to the entity the baddie's following
     float dx, dy;
@@ -36,6 +37,9 @@ void Baddie::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
     // apply velocity along this vector
     if ((direction.x < 0 && _l) || (direction.x > 0 && _r)) box.vx += direction.x * delta->asSeconds() * _speed;
     if ((direction.y < 0 && _u) || (direction.y > 0 && _d)) box.vy += direction.y * delta->asSeconds() * _speed;
+
+
+
     box.vx *= 0.9;
     box.vy *= 0.9;
 
@@ -119,4 +123,20 @@ void Baddie::update(Time *delta, Clock *g_clock, World *world, RenderWindow *win
         box.x += box.vx;
         box.y += box.vy;
     }
+}
+
+void Baddie::drawhealthbar(RenderWindow *window) {
+    RectangleShape bgrect(Vector2f(30, 5));
+    RectangleShape bar(Vector2f(((float)health / (float)maxhealth) * 30.0, 5));
+
+    bgrect.setFillColor(Color(0x181425ff));
+    bgrect.setOutlineColor(Color(0xffffffff));
+    bgrect.setOutlineThickness(1);
+    bar.setFillColor(Color(0xffffffff));
+
+    bgrect.setPosition(Vector2f(box.x, box.y - 7));
+    bar.setPosition(Vector2f(box.x, box.y - 7));
+
+    window->draw(bgrect);
+    window->draw(bar);
 }

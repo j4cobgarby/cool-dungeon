@@ -6,19 +6,25 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <thread>
 
 #include "Entity.hpp"
 #include "asset_registers.hpp"
 #include "AABB.hpp"
 #include "World.hpp"
 #include "Maths.hpp"
+#include "Animation.hpp"
 
-#define SPEED 30
+#define HIT_DURATION 0.3    // seconds
+#define HIT_ANGLE_RANGE 90  // degrees
 
 using namespace std;
 using namespace sf;
 
 class Weapon {
+private:
+    Animation anim;
+
 public:
     Weapon();
     Weapon(string display_name, Texture *tex, unsigned short int damage, unsigned short int range);
@@ -29,17 +35,30 @@ public:
     /** Stats */
     unsigned short int damage;
     unsigned short int range;
+
+    void update_texture(Clock *g_clock) {rect.setTexture(anim.get_frame(g_clock));}
 };
 
 class Player : public Entity {
 private:
-    bool _u=true,_d=true,_l=true,_r=true;
+    bool _u = true, _d = true, _l = true, _r = true;
+    const unsigned short int _speed = 20;
 
     Direction facing = d_right;
     Clock _score_timer;
-public:
-    Player(Vector2f position, Weapon weapon);
+    Clock _hit_timer;
+    Animation anim;
+    vector<Baddie> *_baddies;
 
+    /**
+     * _hit_already
+     * Basically, this records whether or not, in this particular hit cycle,
+     * the damage to enemies has been done.
+     */
+    bool _hit_already = false;
+public:
+    bool _hitting = false;
+    Player(Vector2f position, Weapon weapon);
     Weapon weapon;
 
     map<string, short int> stats {
@@ -50,6 +69,7 @@ public:
         {"sco", 0},
     };
 
+    void set_baddies(vector<Baddie> *baddies) {_baddies = baddies;}
     void update(Time *delta, Clock *g_clock, World *world, RenderWindow *window, const Vector2f *cursor_pos);
     void click(Time *delta, World *world, RenderWindow *window);
 };
