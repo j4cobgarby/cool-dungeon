@@ -43,9 +43,13 @@ map<string, Font> font_register {
 };
 
 int main() {
-    RenderWindow window(sf::VideoMode(1500, 1400), "A cool dungeon game");
+    auto videoMode = sf::VideoMode::getDesktopMode();
+    RenderWindow window(sf::VideoMode(videoMode.width, videoMode.height), "A cool dungeon game");
     Sprite cursor(texture_register["cursor"]);
-    View player_view(Vector2f(200, 200), Vector2f(1500, 1400));
+    // create a view with a fixed aspect ratio (16:9)
+    View player_view(Vector2f(200.0f, 200.0f), Vector2f(1500.0f, 1500.0f*9.0f/16.0f));
+    // the global view can be used to display overlays
+    View global_view(FloatRect(0.0f, 0.0f, window.getSize().x, window.getSize().y));
     ifstream level_file("levels/default/1.level", ios::in | ios::binary);
     Entity test_ent(100, 100, 30, 30, 30, 30, 0, 0, 0, 0, NULL);
     World world(&level_file);
@@ -86,6 +90,12 @@ int main() {
         for (size_t i = 0; i < baddies.size(); i++)
             baddies[i].update(&delta, &global_clock, &world, &window, &baddies);
 
+        player_view.setCenter(Vector2f(
+            lerp(player_view.getCenter().x, player.rect.getPosition().x + 45/2, 1),
+            lerp(player_view.getCenter().y, player.rect.getPosition().y + 45/2, 1)
+        ));
+        window.setView(player_view);
+
         window.clear(Color(0x181425ff));
 
         for (Block block : world.background) window.draw(block.rect);
@@ -95,17 +105,11 @@ int main() {
         for (Baddie baddie : baddies)
             window.draw(baddie.rect);
 
-        window.setView(window.getDefaultView());
+        window.setView(global_view);
         statbar.draw(&window);
         window.draw(cursor);
-        window.setView(player_view);
 
         window.display();
-
-        player_view.setCenter(Vector2f(
-            lerp(player_view.getCenter().x, player.rect.getPosition().x + 45/2, 1),
-            lerp(player_view.getCenter().y, player.rect.getPosition().y + 45/2, 1)
-        ));
         window.setView(player_view);
     }
 
